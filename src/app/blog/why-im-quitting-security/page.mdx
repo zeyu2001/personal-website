@@ -1,0 +1,142 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+import { Figure } from '@/components/Figure'
+import cyberSeaImage from './cybersea.jpg'
+import encodeClubImage from './encode.jpg'
+import cheripiImage from './cheripi.jpg'
+
+export const article = {
+  author: 'Zayne Zhang',
+  date: '2024-08-21',
+  title: "Why I'm \"quitting\" (offensive) security",
+  description:
+    "I don't think you can ever truly quit security, but I'm ready to take a pause on popping shells and start building things that last.",
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+I'm interviewing for summer internships now, and one question that recruiters ask me is "why not cybersecurity?".
+Funnily enough, I've stepped back from security since the start of this year,
+but many people still think I'm the "hacker" and competitive CTF player I used to be.
+
+## How did we get here?
+
+To give you a bit more context about myself, I discovered infosec 3 years ago when I was trying to get out of being sent to the infantry.
+As a Singaporean male, I had to serve in the army. It just so happened that there was a new scheme that allowed people to serve in "cybersecurity" units,
+and the prospect of spending my days in an air-conditioned office instead of in the middle of a jungle was very appealing to me.
+
+So without any knowledge of security at all, I borrowed a textbook from my teacher at the time and did what I was good at as an A-level student: memorizing
+as much as I could a week before the exam. By a stroke of luck, I got in, and the rest was history.
+
+My 18 year old self, who at the time was pretty sure he wanted to study Physics in university, probably wouldn't have believed that his next 3 years would
+see him in Las Vegas, Lausanne, Stockholm, and other places around the world competing in CTF competitions, meeting some of the most talented people in the
+industry, and spending countless hours in front of a computer screen instead of solving differential equations.
+
+<Figure
+  src={cyberSeaImage}
+  alt="Cyber SEA Games 2022, Thailand"
+  caption="Team Singapore @ Cyber SEA Games 2022"
+/>
+
+I went through some structured training in the army with an emphasis on blue teaming. Then I tried my hand at CTFs for the first time — it was brutal.
+I could solve maybe 1 or 2 basic challenges, but the rest of the time I just sat there being confused. But realising just how much I didn't know was
+something that hooked me in, and I played CTFs almost every weekend for the next few months. We even formed our own team, Social Engineering Experts,
+which in 2022 and 2023 was the top CTF team in Singapore.
+
+Eventually I found my niche in web security. CTF trains you really well for source code review and exploit development, so I started poking around
+open source projects and eventually got credited for 15 CVEs, most of which were from my deep dive into [HTTP request smuggling](https://infosec.zeyu2001.com/2022/http-request-smuggling-in-the-multiverse-of-parsing-flaws).
+
+I also started doing bug bounties because among other things, it was fun to hack my own government. I was invited to three private time-bound
+programs organised by the Singapore government, and was ranked 1st (by "signal", or impact) in each one among global participants.
+
+It was really fun. I ended up playing CTFs with [Blue Water](https://ctftime.org/team/205897/), with whom I won 2nd place at the [DEF CON](https://defcon.org/) CTF in 2023. At some point, a teammate reached out to me and asked if I wanted to join Electrovolt, a security consultancy that was partnering with [Cure53](https://cure53.de/). I started doing some work with them on a freelance basis, whenever I had the time. The work has been super cool, working with some really talented people for really big clients. This was also around the time I started my internship with TikTok, where I was doing security research at scale.
+
+## The turning point
+
+After some time trying to break everything I could get my hands on, I started to feel like I was just breaking things for the sake of breaking them. I was getting tired of the constant churn of finding bugs, writing reports, and moving on to the next target. I was tired of the constant pressure to be the best, to be the first, to be the most impactful.
+
+But the biggest question, however, simply boiled down to: "why don't they ***just*** fix it? It's not that hard." I couldn't understand why teams would
+ignore important vulnerabilities, or when something is fixed only to be broken again in the next release. I couldn't understand why we were still finding
+the same classes of vulnerabilities that have been known for years. It's like playing whack-a-mole, but the moles are the size of elephants and there's
+only one hammer.
+
+## University
+
+But no time to dwell on that too much, because I was starting university. I took this as an opportunity to take a step back from living and breathing
+security to enjoy life and explore other interests.
+
+I didn't expect my first year at Cambridge to be *this* busy. To be honest, I spent most of the year thinking I was going to fail. Everyone else seemed
+to be doing so much better, and I was returning to a really difficult technical degree after years of not doing any math or theoretical computer science.
+Cambridge certainly has a way of making you feel like you're not good enough, because I ended up managing a first-class grade in the end.
+
+I was still doing *some* CTFs (and I started playing with the Cambridge team, cheriPI) and freelance work on the side, but there was just a lot more
+to try. I started doing hackathons and for the first time, I started thinking about what products people actually need.
+
+<Figure
+  src={cheripiImage}
+  alt="CheriPI @ LakeCTF 2023"
+  caption="CheriPI @ LakeCTF 2023"
+/>
+
+A hackathon felt like a microcosm of a software shop. You have a team, a deadline, and a goal. No one cares about security when you're trying to get
+a product out the door.
+
+<Figure
+  src={encodeClubImage}
+  alt="Encode Club AI Hackathon in London"
+  caption="Encode Club AI Hackathon in London"
+/>
+
+## How do we do good security, then?
+
+I'm spending this summer at [Open Government Products](https://www.open.gov.sg/), where I now have much more time to think about how to solve security
+problems at scale, and in a way that lasts. I started to appreciate why security can be so hard, and why it's not just a matter of "just fixing it".
+
+The truth is, security is hard because it's not just about fixing bugs. It's about fixing the process that led to the bug in the first place.
+The organisations that are having repeated security incidents are the ones that have a broken process, often because they grew too fast without
+thinking about security, and now they're playing catch-up. But it's hard to catch up when the processes you've put in place and the tools developers
+have gotten comfortable with need to be fundamentally changed.
+
+Security is not prioritised enough because the cost of security is not immediately visible. It's hard to quantify the cost of a security incident
+that didn't happen, and it's hard to justify the cost of security when you're not seeing any immediate benefits. There's no returns when investing
+in security, only losses when you don't.
+
+And if the probability of an incident is low in the first place, then the expected cost of an incident
+is lower than the cost of investing in security.
+
+$$
+\begin{align*}
+E[\text{{cost of incident}}] &= P(\text{{incident}}) \times \text{{cost of incident}} \\
+                             &< \text{{cost of investing in security}}
+\end{align*}
+$$
+
+So to do good security, you probably need to reduce the cost of security. This means making it easy to do the right thing: in Ross Anderson's
+[Software and Security Engineering](https://www.cl.cam.ac.uk/teaching/2324/SWSecEng/) course, there was a lot of emphasis on making the secure
+thing the easiest, or the default, thing to do without compromising on usability.
+
+That means building tools that developers actually want to use, or something so low-friction that they don't even realise they're using it.
+It means building security into the process from the start, and not as an afterthought.
+
+## I can never truly quit security
+
+I don't think I can ever truly quit security. I still love doing it on the side with fun research projects and freelance pentesting work outside
+of my day job or school. But I'm ready to take a pause on popping shells all the time and start building things that last.
+
+And there are so many things I take with me from my time in security. I've learnt how to think adversarially, which helps a lot in writing
+good software. I've learnt how to communicate complex ideas in a way that's easy to understand. I've picked up an attention to detail
+that I didn't have before. I've learnt how to learn.
+
+I think this is probably a good balance. Doing security as both a hobby *and* a job is probably too much for me. I think the analogy "it's a marathon,
+not a sprint" is very apt here. Unfortunately I'm at that age where I need to be a bit more realistic about what I want in my career, and I need to know
+I will still enjoy what I'm doing 10 years down the line.
+
+I'm still not *entirely* sure what I *do* want to do, but I know I've found a passion for being as close to the product as possible. I'm at my best
+when I work on meaningful problems that serve a clear purpose in the world and where I can clearly see the impact of my work.
+
+This has been a long and quite personal post, and I don't want to enforce any particular message on anyone. I just re-made my personal site and decided
+it made sense to write my first post on where I'm at right now. Wherever you are at, I hope you're doing well, and I hope you're doing what you love!
