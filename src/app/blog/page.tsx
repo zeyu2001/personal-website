@@ -1,8 +1,10 @@
+import { RssIcon } from 'lucide-react'
 import { type Metadata } from 'next'
 import Link from 'next/link'
 
 import { Card } from '@/components/Card'
 import { SimpleLayout } from '@/components/SimpleLayout'
+import { Button } from '@/components/ui/button'
 import { type ArticleWithSlug, getAllArticles } from '@/lib/articles'
 import { formatDate } from '@/lib/formatDate'
 
@@ -54,13 +56,23 @@ export default async function ArticlesIndex() {
           ))}
         </div>
       </div>
+      <Button href="/feed.xml" className="mt-16" variant="transparent">
+        <RssIcon className="mr-2 inline-block h-6 w-6 text-teal-500" />
+        <span className="font-semibold text-teal-500">RSS feed</span>
+      </Button>
       <p className="mt-16 max-w-3xl text-zinc-600 dark:text-zinc-400">
         I <i>used</i> to write about security and CTFs on{' '}
-        <Link className="text-teal-500" href="https://infosec.zeyu2001.com">
+        <Link
+          className="font-semibold text-teal-500"
+          href="https://infosec.zeyu2001.com"
+        >
           infosec.zeyu2001.com
         </Link>
         . and{' '}
-        <Link className="text-teal-500" href="https://ctf.zeyu2001.com">
+        <Link
+          className="font-semibold text-teal-500"
+          href="https://ctf.zeyu2001.com"
+        >
           ctf.zeyu2001.com
         </Link>
         . These will remain up so that backlinks to popular writeups don&apos;t

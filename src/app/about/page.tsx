@@ -75,23 +75,38 @@ export default function About() {
               conscription in the Singapore army. I found security
               vulnerabilities in software, and worked with relevant
               organisations to fix them. Examples include the{' '}
-              <Link href="https://english.ncsc.nl/" className="text-teal-500">
+              <Link
+                href="https://english.ncsc.nl/"
+                className="font-semibold text-teal-500"
+              >
                 Dutch National Cyber Security Centre
               </Link>
               , Singapore&apos;s{' '}
-              <Link href="https://www.mindef.gov.sg/" className="text-teal-500">
+              <Link
+                href="https://www.mindef.gov.sg/"
+                className="font-semibold text-teal-500"
+              >
                 Ministry of Defense
               </Link>
               , Singapore&apos;s{' '}
-              <Link href="https://www.tech.gov.sg/" className="text-teal-500">
+              <Link
+                href="https://www.tech.gov.sg/"
+                className="font-semibold text-teal-500"
+              >
                 Government Technology Agency
               </Link>
               ,{' '}
-              <Link href="https://sg.yahoo.com/" className="text-teal-500">
+              <Link
+                href="https://sg.yahoo.com/"
+                className="font-semibold text-teal-500"
+              >
                 Yahoo!
               </Link>
               , and the maintainers of{' '}
-              <Link href="https://nodejs.org/en" className="text-teal-500">
+              <Link
+                href="https://nodejs.org/en"
+                className="font-semibold text-teal-500"
+              >
                 Node.js
               </Link>
               . This got me invited to three private time-bound bug bounty
@@ -102,12 +117,15 @@ export default function About() {
               In that time I did some in-depth security research into areas like{' '}
               <Link
                 href="https://infosec.zeyu2001.com/2022/http-request-smuggling-in-the-multiverse-of-parsing-flaws"
-                className="text-teal-500"
+                className="font-semibold text-teal-500"
               >
                 HTTP request smuggling
               </Link>{' '}
               and{' '}
-              <Link href="https://xsleaks.dev/" className="text-teal-500">
+              <Link
+                href="https://xsleaks.dev/"
+                className="font-semibold text-teal-500"
+              >
                 XS-Leaks
               </Link>
               . Among other things, this earned me 15 credits in the CVE
@@ -118,12 +136,15 @@ export default function About() {
               I also competed in Capture The Flag (CTF) competitions with{' '}
               <Link
                 href="https://ctftime.org/team/205897/"
-                className="text-teal-500"
+                className="font-semibold text-teal-500"
               >
                 Blue Water
               </Link>
               , and placed 🥈 2nd in the{' '}
-              <Link href="https://defcon.org/" className="text-teal-500">
+              <Link
+                href="https://defcon.org/"
+                className="font-semibold text-teal-500"
+              >
                 DEF CON
               </Link>{' '}
               CTF finals, the &quot;olympics of hacking&quot;, for two years in
@@ -131,21 +152,30 @@ export default function About() {
             </p>
             <p>
               I now work with{' '}
-              <Link href="https://cure53.de/" className="text-teal-500">
+              <Link
+                href="https://cure53.de/"
+                className="font-semibold text-teal-500"
+              >
                 Cure53
               </Link>{' '}
               on a freelance basis, and study Computer Science full-time at the{' '}
-              <Link href="https://www.cam.ac.uk/" className="text-teal-500">
+              <Link
+                href="https://www.cam.ac.uk/"
+                className="font-semibold text-teal-500"
+              >
                 University of Cambridge
               </Link>
               . My summers have been spent at{' '}
-              <Link href="https://open.gov.sg/" className="text-teal-500">
+              <Link
+                href="https://open.gov.sg/"
+                className="font-semibold text-teal-500"
+              >
                 Open Government Products
               </Link>{' '}
               and{' '}
               <Link
                 href="https://www.tiktok.com/about"
-                className="text-teal-500"
+                className="font-semibold text-teal-500"
               >
                 TikTok
               </Link>
@@ -156,7 +186,10 @@ export default function About() {
               My go-to hackathon stack is Next.js, Tailwind CSS, and Vercel,
               with which I&apos;ve won quite a few hackathons in London and
               Cambridge. I&apos;m currently building{' '}
-              <Link className="text-teal-500" href="https://eurekapad.app">
+              <Link
+                className="font-semibold text-teal-500"
+                href="https://eurekapad.app"
+              >
                 EurekaPad
               </Link>
               , a note-taking app for STEM students.
