@@ -60,7 +60,7 @@ export default async function ArticlesIndex() {
         <RssIcon className="mr-2 inline-block h-6 w-6 text-teal-500" />
         <span className="font-semibold text-teal-500">RSS feed</span>
       </Button>
-      <p className="mt-16 max-w-3xl text-zinc-600 dark:text-zinc-400">
+      <p className="mt-16 max-w-3xl text-sm text-zinc-600 dark:text-zinc-400">
         I <i>used</i> to write about security and CTFs on{' '}
         <Link
           className="font-semibold text-teal-500"
