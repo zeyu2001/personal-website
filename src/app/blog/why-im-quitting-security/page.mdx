@@ -3,11 +3,13 @@ import { Figure } from '@/components/Figure'
 import cyberSeaImage from './cybersea.jpg'
 import encodeClubImage from './encode.jpg'
 import cheripiImage from './cheripi.jpg'
+import bugBountyImage from './bugbounty.jpg'
+import grassImage from './grass.jpg'
 
 export const article = {
   author: 'Zayne Zhang',
   date: '2024-08-21',
-  title: "Why I'm \"quitting\" (offensive) security",
+  title: 'Why I\'m "quitting" (offensive) security',
   description:
     "I don't think you can ever truly quit security, but I'm ready to take a pause on popping shells and start building things that last.",
 }
@@ -48,18 +50,31 @@ something that hooked me in, and I played CTFs almost every weekend for the next
 which in 2022 and 2023 was the top CTF team in Singapore.
 
 Eventually I found my niche in web security. CTF trains you really well for source code review and exploit development, so I started poking around
-open source projects and eventually got credited for 15 CVEs, most of which were from my deep dive into [HTTP request smuggling](https://infosec.zeyu2001.com/2022/http-request-smuggling-in-the-multiverse-of-parsing-flaws).
+open source projects and eventually got credited for 15 CVEs, most of which were from my deep dive into
+[HTTP request smuggling](https://infosec.zeyu2001.com/2022/http-request-smuggling-in-the-multiverse-of-parsing-flaws).
 
 I also started doing bug bounties because among other things, it was fun to hack my own government. I was invited to three private time-bound
 programs organised by the Singapore government, and was ranked 1st (by "signal", or impact) in each one among global participants.
 
-It was really fun. I ended up playing CTFs with [Blue Water](https://ctftime.org/team/205897/), with whom I won 2nd place at the [DEF CON](https://defcon.org/) CTF in 2023. At some point, a teammate reached out to me and asked if I wanted to join Electrovolt, a security consultancy that was partnering with [Cure53](https://cure53.de/). I started doing some work with them on a freelance basis, whenever I had the time. The work has been super cool, working with some really talented people for really big clients. This was also around the time I started my internship with TikTok, where I was doing security research at scale.
+<Figure
+  src={bugBountyImage}
+  alt="MINDEF Bug Bounty Programme"
+  caption="MINDEF Bug Bounty Programme"
+/>
+
+It was really fun. I ended up playing CTFs with [Blue Water](https://ctftime.org/team/205897/),
+with whom I won 2nd place at the [DEF CON](https://defcon.org/) CTF in 2023. At some point, a teammate reached out to me and asked if I wanted to join
+Electrovolt, a security consultancy that was partnering with [Cure53](https://cure53.de/). I started doing some work with them on a freelance basis,
+whenever I had the time. The work has been super cool, working with some really talented people for really big clients.
+This was also around the time I started my internship with TikTok, where I was doing security research at scale.
 
 ## The turning point
 
-After some time trying to break everything I could get my hands on, I started to feel like I was just breaking things for the sake of breaking them. I was getting tired of the constant churn of finding bugs, writing reports, and moving on to the next target. I was tired of the constant pressure to be the best, to be the first, to be the most impactful.
+After some time trying to break everything I could get my hands on, I started to feel like I was just breaking things for the sake of breaking them.
+I was getting tired of the constant churn of finding bugs, writing reports, and moving on to the next target.
+I was tired of the constant pressure to be the best, to be the first, to be the most impactful.
 
-But the biggest question, however, simply boiled down to: "why don't they ***just*** fix it? It's not that hard." I couldn't understand why teams would
+But the biggest question, however, simply boiled down to: "why don't they **_just_** fix it? It's not that hard." I couldn't understand why teams would
 ignore important vulnerabilities, or when something is fixed only to be broken again in the next release. I couldn't understand why we were still finding
 the same classes of vulnerabilities that have been known for years. It's like playing whack-a-mole, but the moles are the size of elephants and there's
 only one hammer.
@@ -69,11 +84,11 @@ only one hammer.
 But no time to dwell on that too much, because I was starting university. I took this as an opportunity to take a step back from living and breathing
 security to enjoy life and explore other interests.
 
-I didn't expect my first year at Cambridge to be *this* busy. To be honest, I spent most of the year thinking I was going to fail. Everyone else seemed
+I didn't expect my first year at Cambridge to be _this_ busy. To be honest, I spent most of the year thinking I was going to fail. Everyone else seemed
 to be doing so much better, and I was returning to a really difficult technical degree after years of not doing any math or theoretical computer science.
 Cambridge certainly has a way of making you feel like you're not good enough, because I ended up managing a first-class grade in the end.
 
-I was still doing *some* CTFs (and I started playing with the Cambridge team, cheriPI) and freelance work on the side, but there was just a lot more
+I was still doing _some_ CTFs (I started playing with the Cambridge team, cheriPI) and freelance work on the side, but there was just a lot more
 to try. I started doing hackathons and for the first time, I started thinking about what products people actually need.
 
 <Figure
@@ -131,12 +146,16 @@ And there are so many things I take with me from my time in security. I've learn
 good software. I've learnt how to communicate complex ideas in a way that's easy to understand. I've picked up an attention to detail
 that I didn't have before. I've learnt how to learn.
 
-I think this is probably a good balance. Doing security as both a hobby *and* a job is probably too much for me. I think the analogy "it's a marathon,
+I think this is probably a good balance. Doing security as both a hobby _and_ a job is probably too much for me. I think the analogy "it's a marathon,
 not a sprint" is very apt here. Unfortunately I'm at that age where I need to be a bit more realistic about what I want in my career, and I need to know
 I will still enjoy what I'm doing 10 years down the line.
 
-I'm still not *entirely* sure what I *do* want to do, but I know I've found a passion for being as close to the product as possible. I'm at my best
+I'm still not _entirely_ sure what I _do_ want to do, but I know I've found a passion for being as close to the product as possible. I'm at my best
 when I work on meaningful problems that serve a clear purpose in the world and where I can clearly see the impact of my work.
 
 This has been a long and quite personal post, and I don't want to enforce any particular message on anyone. I just re-made my personal site and decided
 it made sense to write my first post on where I'm at right now. Wherever you are at, I hope you're doing well, and I hope you're doing what you love!
+
+Oh, and please remember to touch grass.
+
+<Figure src={grassImage} alt="Touch grass" caption="Touch grass" />
