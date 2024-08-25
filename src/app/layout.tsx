@@ -1,5 +1,6 @@
 import '@/styles/tailwind.css'
 
+import { Analytics } from '@vercel/analytics/react'
 import { type Metadata } from 'next'
 
 import { Providers } from '@/app/providers'
@@ -27,6 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <body className="flex h-full bg-zinc-50 dark:bg-zinc-900">
+        <Analytics />
         <Providers>
           <div className="flex w-full">
             <Layout>{children}</Layout>
