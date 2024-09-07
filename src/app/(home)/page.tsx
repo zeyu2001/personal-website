@@ -37,7 +37,7 @@ function Photos() {
           <div
             key={image.src}
             className={clsx(
-              'relative aspect-[9/10] w-44 flex-none overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800 sm:w-72',
+              'relative aspect-[9/10] w-44 flex-none overflow-hidden rounded-xl bg-zinc-100 sm:w-72 dark:bg-zinc-800',
               imageIndex % 2 === 0 && 'card-wrapper',
               rotations[imageIndex % rotations.length],
             )}
@@ -51,7 +51,6 @@ function Photos() {
               <Image
                 src={image}
                 alt=""
-                sizes="(min-width: 640px) 18rem, 11rem"
                 className="h-full w-full rounded-2xl bg-zinc-100 object-cover dark:bg-zinc-900"
               />
             </div>

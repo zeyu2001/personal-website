@@ -52,7 +52,6 @@ export default function About() {
                 <Image
                   src={portraitImage}
                   alt=""
-                  sizes="(min-width: 1024px) 32rem, 20rem"
                   className="aspect-square rounded-2xl bg-zinc-100 object-cover p-1 dark:bg-zinc-800 dark:p-0"
                 />
               </div>

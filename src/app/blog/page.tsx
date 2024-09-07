@@ -67,8 +67,8 @@ export default async function ArticlesIndex() {
           href="https://infosec.zeyu2001.com"
         >
           infosec.zeyu2001.com
-        </Link>
-        . and{' '}
+        </Link>{' '}
+        and{' '}
         <Link
           className="font-semibold text-teal-500"
           href="https://ctf.zeyu2001.com"
