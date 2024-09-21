@@ -7,17 +7,9 @@ import { useEffect, useRef, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
-).toString()
+pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString()
 
 export function Pdf({
   src,
@@ -75,9 +67,7 @@ export function Pdf({
       <DialogContent ref={contentRef} className="max-w-[800px] gap-y-4">
         <DialogHeader>
           <div className="flex justify-between gap-y-2 text-left">
-            <DialogTitle className="font-semibold text-zinc-800 dark:text-zinc-100 md:text-xl">
-              {title}
-            </DialogTitle>
+            <DialogTitle className="font-semibold text-zinc-800 md:text-xl dark:text-zinc-100">{title}</DialogTitle>
             <Button
               onClick={() => {
                 const link = document.createElement('a')
@@ -112,11 +102,7 @@ export function Pdf({
             <p className="text-md font-medium text-zinc-800 dark:text-zinc-100">
               Page {pageNumber} of {numPages}
             </p>
-            <Button
-              onClick={nextPage}
-              disabled={pageNumber >= numPages}
-              variant="transparent"
-            >
+            <Button onClick={nextPage} disabled={pageNumber >= numPages} variant="transparent">
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>

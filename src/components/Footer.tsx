@@ -10,10 +10,7 @@ function NavLink({
   children: React.ReactNode
 }>) {
   return (
-    <Link
-      href={href}
-      className="transition hover:text-teal-500 dark:hover:text-teal-400"
-    >
+    <Link href={href} className="transition hover:text-teal-500 dark:hover:text-teal-400">
       {children}
     </Link>
   )
@@ -34,8 +31,7 @@ export function Footer() {
                 <NavLink href="/speaking">Speaking</NavLink>
               </div>
               <p className="text-sm text-zinc-400 dark:text-zinc-500">
-                &copy; {new Date().getFullYear()} Zeyu (Zayne) Zhang. All rights
-                reserved.
+                &copy; {new Date().getFullYear()} Zeyu (Zayne) Zhang. All rights reserved.
               </p>
             </div>
           </ContainerInner>

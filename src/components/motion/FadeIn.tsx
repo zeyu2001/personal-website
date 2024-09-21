@@ -3,13 +3,7 @@
 import { motion, useAnimation, useInView } from 'framer-motion'
 import { useEffect, useRef } from 'react'
 
-export const FadeIn = ({
-  children,
-  canStart = true,
-}: {
-  children: React.ReactNode
-  canStart?: boolean
-}) => {
+export const FadeIn = ({ children, canStart = true }: { children: React.ReactNode; canStart?: boolean }) => {
   const controls = useAnimation()
   const ref = useRef(null)
   const isInView = useInView(ref, { amount: 0.5, once: true })

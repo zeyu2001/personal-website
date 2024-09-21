@@ -4,15 +4,9 @@ import dynamic from 'next/dynamic'
 import { Section } from '@/components/Section'
 import { SimpleLayout } from '@/components/SimpleLayout'
 
-const Appearance = dynamic(
-  () => import('./appearance').then((mod) => mod.Appearance),
-  { ssr: false },
-)
+const Appearance = dynamic(() => import('./appearance').then((mod) => mod.Appearance), { ssr: false })
 
-function SpeakingSection({
-  children,
-  ...props
-}: Readonly<React.ComponentPropsWithoutRef<typeof Section>>) {
+function SpeakingSection({ children, ...props }: Readonly<React.ComponentPropsWithoutRef<typeof Section>>) {
   return (
     <Section {...props}>
       <div className="space-y-16">{children}</div>

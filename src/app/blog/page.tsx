@@ -13,22 +13,13 @@ function Article({ article }: Readonly<{ article: ArticleWithSlug }>) {
     <article className="md:grid md:grid-cols-4 md:items-baseline">
       <Card className="md:col-span-3">
         <Card.Title href={`/blog/${article.slug}`}>{article.title}</Card.Title>
-        <Card.Eyebrow
-          as="time"
-          dateTime={article.date}
-          className="md:hidden"
-          decorate
-        >
+        <Card.Eyebrow as="time" dateTime={article.date} className="md:hidden" decorate>
           {formatDate(article.date)}
         </Card.Eyebrow>
         <Card.Description>{article.description}</Card.Description>
         <Card.Cta>Read article</Card.Cta>
       </Card>
-      <Card.Eyebrow
-        as="time"
-        dateTime={article.date}
-        className="mt-1 hidden md:block"
-      >
+      <Card.Eyebrow as="time" dateTime={article.date} className="mt-1 hidden md:block">
         {formatDate(article.date)}
       </Card.Eyebrow>
     </article>
@@ -62,21 +53,15 @@ export default async function ArticlesIndex() {
       </Button>
       <p className="mt-16 max-w-3xl text-sm text-zinc-600 dark:text-zinc-400">
         I <i>used</i> to write about security and CTFs on{' '}
-        <Link
-          className="font-semibold text-teal-500"
-          href="https://infosec.zeyu2001.com"
-        >
+        <Link className="font-semibold text-teal-500" href="https://infosec.zeyu2001.com">
           infosec.zeyu2001.com
         </Link>{' '}
         and{' '}
-        <Link
-          className="font-semibold text-teal-500"
-          href="https://ctf.zeyu2001.com"
-        >
+        <Link className="font-semibold text-teal-500" href="https://ctf.zeyu2001.com">
           ctf.zeyu2001.com
         </Link>
-        . These will remain up so that backlinks to popular writeups don&apos;t
-        break, but this blog is where I&apos;ll be posting new content.
+        . These will remain up so that backlinks to popular writeups don&apos;t break, but this blog is where I&apos;ll
+        be posting new content.
       </p>
     </SimpleLayout>
   )

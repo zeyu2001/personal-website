@@ -41,6 +41,7 @@
     "react-pdf": "8.0.2",
     "react-sizeme": "^3.0.2",
     "rehype-katex": "^7.0.1",
+    "rehype-pretty-code": "^0.14.0",
     "remark-gfm": "^4.0.0",
     "remark-math": "^6.0.0",
     "tailwind-merge": "^2.5.2",

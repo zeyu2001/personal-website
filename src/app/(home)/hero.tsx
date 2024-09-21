@@ -12,11 +12,7 @@ export const Hero = () => {
   const [animationComplete, setAnimationComplete] = useState(false)
   const onAnimationComplete = () => setAnimationComplete(true)
 
-  const headingText = [
-    'Software engineer,',
-    'wannabe hacker,',
-    'not an AI shill.',
-  ]
+  const headingText = ['Software engineer,', 'wannabe hacker,', 'not an AI shill.']
 
   return (
     <Container className="mt-9">
@@ -34,9 +30,8 @@ export const Hero = () => {
         />
         <FadeIn canStart={animationComplete}>
           <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-            I&apos;m Zayne (or Zeyu, if you prefer mandarin), a software
-            engineer with a background in computer security. I&apos;m a Computer
-            Science student at Cambridge, and I love to build things that make a
+            I&apos;m Zayne (or Zeyu, if you prefer mandarin), a software engineer with a background in computer
+            security. I&apos;m a Computer Science student at Cambridge, and I love to build things that make a
             difference.
           </p>
           <Socials />

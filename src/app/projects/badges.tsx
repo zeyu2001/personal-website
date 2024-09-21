@@ -1,13 +1,5 @@
 import { RiNextjsFill, RiTailwindCssFill } from 'react-icons/ri'
-import {
-  SiClerk,
-  SiGooglechrome,
-  SiMicrosoftazure,
-  SiRadixui,
-  SiReact,
-  SiTypescript,
-  SiVercel,
-} from 'react-icons/si'
+import { SiClerk, SiGooglechrome, SiMicrosoftazure, SiRadixui, SiReact, SiTypescript, SiVercel } from 'react-icons/si'
 
 import { Badge } from '@/components/ui/badge'
 

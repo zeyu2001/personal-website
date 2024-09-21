@@ -42,12 +42,7 @@ function Photos() {
               rotations[imageIndex % rotations.length],
             )}
           >
-            <div
-              className={clsx(
-                'h-full w-full',
-                imageIndex % 2 === 0 && 'card-content',
-              )}
-            >
+            <div className={clsx('h-full w-full', imageIndex % 2 === 0 && 'card-content')}>
               <Image
                 src={image}
                 alt=""

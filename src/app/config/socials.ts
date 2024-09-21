@@ -1,9 +1,4 @@
-import {
-  GitHubIcon,
-  LinkedInIcon,
-  MailIcon,
-  XIcon,
-} from '@/components/SocialIcons'
+import { GitHubIcon, LinkedInIcon, MailIcon, XIcon } from '@/components/SocialIcons'
 
 interface Socials {
   href: string

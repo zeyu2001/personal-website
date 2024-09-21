@@ -41,23 +41,14 @@ interface Project {
 const featured: FeaturedProject[] = [
   {
     name: 'EurekaPad',
-    description:
-      'Notion + Jupyter Notebooks for STEM students. Supported by Microsoft for Startups.',
+    description: 'Notion + Jupyter Notebooks for STEM students. Supported by Microsoft for Startups.',
     link: { href: 'https://www.eurekapad.app', label: 'eurekapad.app' },
     image: imageEurekapad,
-    badges: [
-      NextjsBadge,
-      TailwindBadge,
-      RadixBadge,
-      ClerkBadge,
-      VercelBadge,
-      AzureBadge,
-    ],
+    badges: [NextjsBadge, TailwindBadge, RadixBadge, ClerkBadge, VercelBadge, AzureBadge],
   },
   {
     name: 'Hughes Hall May Ball',
-    description:
-      'Website for the 2024 May Ball at Hughes Hall, University of Cambridge.',
+    description: 'Website for the 2024 May Ball at Hughes Hall, University of Cambridge.',
     link: {
       href: 'https://hughesmayball24.vercel.app',
       label: 'hughesmayball.co.uk',
@@ -82,8 +73,7 @@ const projects: Project[] = [
       'Social media aggregator that provides personalised feed for users to regain control of their social media algorithms.',
     link: { href: 'https://github.com/ECHO-LONDON/ECHO-Web', label: 'GitHub' },
     hackathon: true,
-    hackathonDetails:
-      '🥇 Most promising AI x Web3 build, 1st place @ Encode Club London AI Hackathon 2024',
+    hackathonDetails: '🥇 Most promising AI x Web3 build, 1st place @ Encode Club London AI Hackathon 2024',
   },
   {
     name: 'EduAble',
@@ -91,8 +81,7 @@ const projects: Project[] = [
       'STEM notetaking app with real-time audio transcription to Markdown & LaTeX, and AI-generated summaries & quizzes.',
     link: { href: 'https://github.com/zeyu2001/EduAble', label: 'GitHub' },
     hackathon: true,
-    hackathonDetails:
-      '🥈 2nd place @ Cambridge Generative AI Hackathon 2024, Finalist @ Fitzelerate 2024',
+    hackathonDetails: '🥈 2nd place @ Cambridge Generative AI Hackathon 2024, Finalist @ Fitzelerate 2024',
   },
   {
     name: 'Zeno',
@@ -156,9 +145,7 @@ export default function Projects() {
           </Card>
         ))}
       </ul>
-      <h2 className="mt-16 text-2xl font-semibold text-zinc-800 dark:text-zinc-100">
-        Honourable mentions
-      </h2>
+      <h2 className="mt-16 text-2xl font-semibold text-zinc-800 dark:text-zinc-100">Honourable mentions</h2>
       <ul className="mt-6 divide-y divide-zinc-100 overflow-hidden dark:divide-zinc-800">
         {projects.map((project) => (
           <li
@@ -168,9 +155,7 @@ export default function Projects() {
             <div className="flex gap-x-3">
               <Link href={project.link.href}>
                 <span className="absolute inset-x-0 -top-px bottom-0" />
-                <p className="text-sm font-semibold leading-6">
-                  {project.name}
-                </p>
+                <p className="text-sm font-semibold leading-6">{project.name}</p>
               </Link>
               <p className="whitespace-nowrap rounded-md bg-teal-50 px-1.5 text-xs font-medium text-teal-700 ring-1 ring-inset ring-teal-600/20 dark:bg-teal-900 dark:text-teal-50">
                 Hackathon
@@ -181,12 +166,8 @@ export default function Projects() {
             </div>
             <div className="flex items-center justify-between gap-x-4 md:w-1/2 lg:w-2/3">
               <div className="mt-2 gap-x-2 space-y-1 text-xs leading-5">
-                <p className="font-medium text-zinc-800 dark:text-zinc-100">
-                  {project.hackathonDetails}
-                </p>
-                <p className="text-zinc-600 dark:text-zinc-400">
-                  {project.description}
-                </p>
+                <p className="font-medium text-zinc-800 dark:text-zinc-100">{project.hackathonDetails}</p>
+                <p className="text-zinc-600 dark:text-zinc-400">{project.description}</p>
               </div>
               <div className="hidden text-zinc-400 group-hover:text-teal-500 md:flex">
                 <ChevronRight />

@@ -42,9 +42,7 @@ export function Appearance({
       <Card.Eyebrow decorate>{event}</Card.Eyebrow>
       <Card.Description>{description}</Card.Description>
       <Card.Cta>{cta}</Card.Cta>
-      {!href && pdfLink && (
-        <Pdf src={pdfLink} title={title} open={open} setOpen={setOpen} />
-      )}
+      {!href && pdfLink && <Pdf src={pdfLink} title={title} open={open} setOpen={setOpen} />}
     </Card>
   )
 }
