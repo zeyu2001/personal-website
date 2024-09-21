@@ -7,7 +7,7 @@ export const article = {
   date: '2024-09-21',
   title: 'An introduction to CodeQL and data flow analysis',
   description:
-    'An introduction to static analysis, taint tracking, and the problems that CodeQL is solving under the hood.',
+    'The fundamentals of static code analysis, taint tracking, and problems that CodeQL is solving under the hood.',
 }
 
 export const metadata = {
@@ -161,7 +161,7 @@ user input, then `y` must also be treated as untrusted.
 This is a fundamentally recursive task: given some propagation rules that determine whether the result of some operation, given tainted inputs, is also tainted,
 explore the program's control flow until no more tainted data can be found.
 
-In other words, find $\overline{X}=F(\overline{X})$ where $\overline{X}$ is a vector of "In's" and "Out's" representing the set of variables tained before and after
+In other words, find $\overline{X}=F(\overline{X})$ where $\overline{X}$ is a vector of "In's" and "Out's" representing the set of variables tainted before and after
 each statement, and $F$ is a function that applies the propagation rules. We want the **least fixed point**, i.e. the smallest $\overline{X}$ such that $\overline{X}=F(\overline{X})$.
 
 A partial order is a relation that is reflexive, transitive, and antisymmetric. We can define a partial order among vectors of sets:

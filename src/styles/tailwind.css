@@ -1,6 +1,7 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import './prism.css';
+@import './katex.css';
 @import 'tailwindcss/utilities';
 
 @layer utilities {
