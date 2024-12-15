@@ -1,9 +1,14 @@
+'use client'
 import { ArrowRightIcon } from 'lucide-react'
 import Image, { type ImageProps } from 'next/image'
+import { useTheme } from 'next-themes'
 
 import { Button } from '@/components/ui/button'
+import logoAuthenticate from '@/images/logos/allthenticate.png'
+import logoAuthenticateDark from '@/images/logos/allthenticate-white.png'
 import logoC53 from '@/images/logos/cure53.png'
 import logoOGP from '@/images/logos/ogp.webp'
+import logoOptiver from '@/images/logos/optiver.png'
 import logoTikTok from '@/images/logos/tiktok.png'
 
 interface Role {
@@ -65,33 +70,72 @@ function BriefcaseIcon(props: Readonly<React.ComponentPropsWithoutRef<'svg'>>) {
 }
 
 export function Resume() {
+  let { resolvedTheme } = useTheme()
   let resume: Array<Role> = [
     {
-      company: 'Open Government Products',
+      company: 'Optiver (Incoming)',
       title: 'Software Engineer Intern',
-      logo: logoOGP,
-      start: 'Jun. 2024',
+      logo: logoOptiver,
+      start: {
+        label: 'Jul. 2025',
+        dateTime: '2025-07',
+      },
       end: {
-        label: 'Present',
-        dateTime: new Date().getFullYear().toString(),
+        label: 'Sep. 2025',
+        dateTime: '2025-09',
+      },
+    },
+    {
+      company: 'Allthenticate',
+      title: 'Software Engineer Intern',
+      logo: resolvedTheme === 'dark' ? logoAuthenticateDark : logoAuthenticate,
+      start: {
+        label: 'Dec. 2024',
+        dateTime: '2024-12',
+      },
+      end: {
+        label: 'Jan. 2025',
+        dateTime: '2025-01',
       },
     },
     {
       company: 'Cure53',
       title: 'Freelance Security Consultant',
       logo: logoC53,
-      start: 'May 2023',
+      start: {
+        label: 'May 2023',
+        dateTime: '2023-05',
+      },
       end: {
         label: 'Present',
         dateTime: new Date().getFullYear().toString(),
       },
     },
     {
+      company: 'Open Government Products',
+      title: 'Software Engineer Intern',
+      logo: logoOGP,
+      start: {
+        label: 'Jun. 2024',
+        dateTime: '2024-06',
+      },
+      end: {
+        label: 'Sep. 2024',
+        dateTime: '2024-09',
+      },
+    },
+    {
       company: 'TikTok',
       title: 'Security Engineer Intern',
       logo: logoTikTok,
-      start: 'Apr. 2023',
-      end: 'Sep. 2023',
+      start: {
+        label: 'Apr. 2023',
+        dateTime: '2023-04',
+      },
+      end: {
+        label: 'Sep. 2023',
+        dateTime: '2023-09',
+      },
     },
   ]
 

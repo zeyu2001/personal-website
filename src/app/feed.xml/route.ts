@@ -59,6 +59,8 @@ export async function GET(req: Request) {
       date: new Date(date),
     })
   }
+  // Latest articles first
+  feed.items.sort((a, b) => b.date.getTime() - a.date.getTime())
 
   return new Response(feed.rss2(), {
     status: 200,
