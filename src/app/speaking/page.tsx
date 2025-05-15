@@ -28,6 +28,13 @@ export default function Speaking() {
       <div className="space-y-20">
         <SpeakingSection title="Conferences">
           <Appearance
+            href="https://youtu.be/GmrvgAcYcWo"
+            title="Static Program Analysis for Security"
+            description="Theoretical foundations of static program analysis for security, with an example of bug hunting with CodeQL."
+            event="Cambridge University, 2025"
+            cta="Watch video"
+          />
+          <Appearance
             pdfLink="/slides/pwnEd5.pdf"
             title="Client-Side Attacks in a Post-XSS World"
             description="Exploring the merits and potential pitfalls of various protections against XSS and CSRF, novel classes of client-side attacks and some real-world examples of their applications."

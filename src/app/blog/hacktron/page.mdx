@@ -1,0 +1,79 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+import { Figure } from '@/components/Figure'
+import memeImage from './meme.jpg'
+
+export const article = {
+  author: 'Zayne Zhang',
+  date: '2025-05-16',
+  title: 'Leaving Cambridge and co-founding Hacktron AI',
+  description:
+    "In a few weeks, I'll be leaving Cambridge and working on Hacktron AI full-time. We're going to shape the future of AI-assisted security research.",
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+## TL;DR
+
+In a few weeks, I'll be leaving Cambridge and working on [Hacktron AI](https://www.hacktron.ai/) full-time. 
+
+I am finishing up my second-year exams in June, after which I'll be taking time away from my studies. While I've wanted to intermit for quite some time for personal reasons, this will also allow me to focus on Hacktron AI,
+which I've co-founded with [Mohan](https://s1r1us.ninja/) and [Harsh](https://x.com/rootxharsh). We're the first company to be backed by [Project Europe](https://www.projecteurope.co), an ambitious initiative
+by some of the best European founders and VCs to support the next generation of European founders.
+
+This is a dream come true for me in many ways.
+
+<Figure src={memeImage} alt="Meme" width="2/3" caption="TL;DR" />
+
+## Taking the leap of faith
+
+Cambridge has so far been an incredibly transformative experience, and one thing it has taught me is relentless ambition. When I first arrived, my goal was simply to prove myself and do well in 
+exams. When it came to my second year, I started feeling incredibly pressured to figure out what I wanted to do with my life post-graduation. As a natural result of being surrounded by some of
+the most ambitious people in the world, in the past year alone, I've found myself considering all 3 stereotypical paths for a CS student:
+
+1. FAANG — I got an internship offer from Amazon.
+2. Quant — I turned it down for an internship at Optiver.
+3. Startup — I'm ultimately turning down the internship to go all in on Hacktron AI.
+
+I think I've always been a builder at heart. And the beauty of that is that if you work hard enough, you can will ideas into existence. I just never knew that
+*you could just do things* and that you didn't need to wait for "the right moment". The right moment isn't a thing, and with the rate at which the world is changing
+today, there is only opportunity cost to waiting. Embracing this mindset has opened up new avenues for me, and I have some people to thank for that.
+
+- [Max](https://www.linkedin.com/in/max-r-103462221/), [Dom](https://www.linkedin.com/in/dominik-diak/) and (another) [Max](https://www.linkedin.com/in/max-mugnaioni/) from 
+[Entrepreneur First](https://www.joinef.com/) for being some of the first people to challenge me to think critically about what I wanted to do with my life.
+- [Ved](https://x.com/vedaangh), [Swarnim](https://x.com/swar_ja), and [Oli](https://x.com/fogelin) for carrying the Cambridge builder scene with [CUAI](https://www.cuai.org.uk).
+- [Fitzelerate](https://www.fitz.cam.ac.uk/fitzelerate) and [Queens' Entrepreneurship Society](https://queens.shorthandstories.com/queens-entrepreneurial-society/index.html) for
+blessing me with the thrill of building and the confidence to pitch my first real project, [EurekaPad](https://www.eurekapad.app), which I started with [Adelyn](https://www.linkedin.com/in/adelyn-w-a2b779228), 
+[Kai Xuan](https://www.linkedin.com/in/kai-xuan-lee), and [Sebastian](https://www.linkedin.com/in/sebastian-yii).
+Ultimately I felt the vision was a bit too small, and it would be nicer as a bootstrapped side project rather than a venture-scale startup.
+- [Josh](https://www.linkedin.com/in/joshualimyaohong) for bringing cool people together with [Cambridge University Entrepreneurs](https://www.cambridgeuniversityentrepreneurs.com).
+- [Euan](https://www.linkedin.com/in/euanong) for this [well-written article](https://space.ong.ac/escaping-flatland) about figuring out a meaningful career path.
+- And of course, [Kitty](https://www.linkedin.com/in/kittymm/), [Kieran](https://www.linkedin.com/in/kieranleehill/) and [Harry](https://www.linkedin.com/in/harrystebbings) for being the absolute legends that they are and making Project Europe the movement that it is.
+
+I knew that once I graduated from university, settled into a job, and started having actual responsibilities, there would probably never be a chance as good as now to drop everything and
+go all in on something I believe in.
+
+Taking the leap of faith hasn't been easy, though. Up to this point, I think my life has been optimized around moving up the social ladder and building a better life 
+for myself and my family. For people like me, who have been raised in a culture where success is still largely defined by the prestige of your university and the number of
+zeros in your bank account, I think being an entrepreneur is one of those things most people only fantasize about.
+
+It's for that reason that I'm immensely grateful that my Asian parents have supported me every step of the way. I think on some level, they've always understood my desire for purpose.
+
+## What we're building
+
+Thanks to AI, the world is writing more code than ever. The capabilities of threat actors to scale attacks will also increase exponentially, at a time when the number of vulnerabilities in the world
+is also exploding. We are building an equal and opposite force that democratizes security expertise for companies that don't have the resources or time to think deeply about security.
+
+Hacktron is an autonomous security researcher that lives in every part of the software development lifecycle. It finds, triages, and fixes vulnerabilities in codebases, at a fraction of the cost of a penetration test while delivering equivalent results.
+
+So far, Hacktron has:
+
+- Performed an audit for [Gumroad](https://gumroad.com/) where it autonomously identified a critical SQL injection vulnerability and several other high-severity vulnerabilities, and fixed them via pull requests.
+- Identified multiple critical vulnerabilities in open-source projects (CVEs pending).
+- Received its [first bounty](https://x.com/HacktronAI/status/1922528253895483618) from Bugcrowd.
+
+And we're just getting started. Read more about our mission and approach on our [blog](https://www.hacktron.ai/blog).
