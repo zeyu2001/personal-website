@@ -2,6 +2,8 @@ import assert from 'assert'
 import * as cheerio from 'cheerio'
 import { Feed } from 'feed'
 
+import { getAllArticles } from '@/lib/articles'
+
 export async function GET(req: Request) {
   let siteUrl = process.env.NEXT_PUBLIC_SITE_URL
 
@@ -28,22 +30,19 @@ export async function GET(req: Request) {
     },
   })
 
-  let articleIds = require
-    .context('../blog', true, /\/page\.mdx$/)
-    .keys()
-    .filter((key) => key.startsWith('./'))
-    .map((key) => key.slice(2).replace(/\/page\.mdx$/, ''))
-
-  for (let id of articleIds) {
+  const articles = await getAllArticles()
+  
+  for (let article of articles) {
+    const id = article.slug
     let url = String(new URL(`/blog/${id}`, req.url))
     let html = await (await fetch(url)).text()
     let $ = cheerio.load(html)
 
     let publicUrl = `${siteUrl}/blog/${id}`
-    let article = $('article').first()
-    let title = article.find('h1').first().text()
-    let date = article.find('time').first().attr('datetime')
-    let content = article.find('[data-mdx-content]').first().html()
+    let articleElement = $('article').first()
+    let title = articleElement.find('h1').first().text()
+    let date = articleElement.find('time').first().attr('datetime')
+    let content = articleElement.find('[data-mdx-content]').first().html()
 
     assert(typeof title === 'string')
     assert(typeof date === 'string')
@@ -59,8 +58,6 @@ export async function GET(req: Request) {
       date: new Date(date),
     })
   }
-  // Latest articles first
-  feed.items.sort((a, b) => b.date.getTime() - a.date.getTime())
 
   return new Response(feed.rss2(), {
     status: 200,
