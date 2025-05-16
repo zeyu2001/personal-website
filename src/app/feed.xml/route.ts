@@ -2,8 +2,6 @@ import assert from 'assert'
 import * as cheerio from 'cheerio'
 import { Feed } from 'feed'
 
-import { getAllArticles } from '@/lib/articles'
-
 export async function GET(req: Request) {
   let siteUrl = process.env.NEXT_PUBLIC_SITE_URL
 
@@ -29,24 +27,33 @@ export async function GET(req: Request) {
       rss2: `${siteUrl}/feed.xml`,
     },
   })
-
-  const articles = await getAllArticles()
   
-  for (let article of articles) {
-    const id = article.slug
+  let articleIds = require
+    .context('../blog', true, /\/page\.mdx$/)
+    .keys()
+    .filter((key) => key.startsWith('./'))
+    .map((key) => key.slice(2).replace(/\/page\.mdx$/, ''))
+
+  for (let id of articleIds) {
     let url = String(new URL(`/blog/${id}`, req.url))
     let html = await (await fetch(url)).text()
     let $ = cheerio.load(html)
 
     let publicUrl = `${siteUrl}/blog/${id}`
-    let articleElement = $('article').first()
-    let title = articleElement.find('h1').first().text()
-    let date = articleElement.find('time').first().attr('datetime')
-    let content = articleElement.find('[data-mdx-content]').first().html()
+    let article = $('article').first()
+    let hidden = article.attr('data-hidden')
+    let title = article.find('h1').first().text()
+    let date = article.find('time').first().attr('datetime')
+    let content = article.find('[data-mdx-content]').first().html()
 
+    assert(typeof hidden === 'string')
     assert(typeof title === 'string')
     assert(typeof date === 'string')
     assert(typeof content === 'string')
+
+    if (hidden === 'true') {
+      continue
+    }
 
     feed.addItem({
       title,
@@ -58,6 +65,8 @@ export async function GET(req: Request) {
       date: new Date(date),
     })
   }
+
+  feed.items.sort((a, b) => +new Date(b.date) - +new Date(a.date))
 
   return new Response(feed.rss2(), {
     status: 200,

@@ -5,6 +5,9 @@ interface Article {
   description: string
   author: string
   date: string
+
+  // Whether to list this article in the blog index and RSS feed
+  // Hidden articles are still accessible via their slug
   hidden?: boolean
 }
 
