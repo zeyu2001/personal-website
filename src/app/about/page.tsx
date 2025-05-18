@@ -120,15 +120,14 @@ export default function About() {
               CTF finals, the &quot;olympics of hacking&quot;, for two years in a row.
             </p>
             <p>
-              I now work with{' '}
+              I worked with{' '}
               <Link href="https://cure53.de/" className="font-semibold text-teal-500">
                 Cure53
               </Link>{' '}
-              on a freelance basis, and study Computer Science full-time at the{' '}
+              on a freelance basis, and studied Computer Science at the{' '}
               <Link href="https://www.cam.ac.uk/" className="font-semibold text-teal-500">
                 University of Cambridge
-              </Link>
-              . My summers have been spent at{' '}
+              </Link> before going on leave after my second year. My summers have been spent at{' '}
               <Link href="https://open.gov.sg/" className="font-semibold text-teal-500">
                 Open Government Products
               </Link>{' '}
@@ -139,13 +138,14 @@ export default function About() {
               , where I worked on solving security problems at scale.
             </p>
             <p>
-              My interests now lie in building products that make a difference. My go-to hackathon stack is Next.js,
-              Tailwind CSS, and Vercel, with which I&apos;ve won quite a few hackathons in London and Cambridge.
-              I&apos;m currently building{' '}
+              My interests now lie in building products that make a difference. Previously, I built{' '}
               <Link className="font-semibold text-teal-500" href="https://eurekapad.app">
                 EurekaPad
               </Link>
-              , a note-taking app for STEM students.
+              , a note-taking app for STEM students, and I&apos;m now building AI hackers at{' '}
+              <Link className="font-semibold text-teal-500" href="https://hacktron.ai">
+                Hacktron AI
+              </Link>. We believe that we can solve 90% of all software security problems with AI.
             </p>
             <p>
               Professionally, I&apos;m a full-stack developer with a passion for being as close to the product as

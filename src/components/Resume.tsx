@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import logoAuthenticate from '@/images/logos/allthenticate.png'
 import logoAuthenticateDark from '@/images/logos/allthenticate-white.png'
 import logoC53 from '@/images/logos/cure53.png'
+import logoHacktron from '@/images/logos/hacktron.png'
 import logoOGP from '@/images/logos/ogp.webp'
 import logoOptiver from '@/images/logos/optiver.png'
 import logoTikTok from '@/images/logos/tiktok.png'
@@ -73,8 +74,21 @@ export function Resume() {
   let { resolvedTheme } = useTheme()
   let resume: Array<Role> = [
     {
-      company: 'Optiver (Incoming)',
-      title: 'Software Engineer Intern',
+      company: 'Hacktron AI',
+      title: 'Co-Founder & CEO',
+      logo: logoHacktron,
+      start: {
+        label: 'Apr. 2025',
+        dateTime: '2025-04',
+      },
+      end: {
+        label: 'Present',
+        dateTime: new Date().getFullYear().toString(),
+      },
+    },
+    {
+      company: 'Optiver',
+      title: 'In another life...',
       logo: logoOptiver,
       start: {
         label: 'Jul. 2025',
