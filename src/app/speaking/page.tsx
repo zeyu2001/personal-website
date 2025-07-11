@@ -67,6 +67,13 @@ export default function Speaking() {
         </SpeakingSection>
         <SpeakingSection title="Meetups">
           <Appearance
+            pdfLink="/slides/kisa.pdf"
+            title="From Hacker to Startup Founder"
+            description="My journey learning cybersecurity, competing in CTFs, doing vulnerability research, and ultimately starting a company."
+            event="KISA Cybersecurity Rookie Meet-up Day, 2025"
+            cta="Get slides"
+          />
+          <Appearance
             pdfLink="/slides/div0.pdf"
             title="Learn Hacking Through CTF Competitions"
             description="what a year of playing CTF competitions and competing against top teams globally has taught me, how CTF challenges can realistically model real-world vulnerabilities, and how ethical hackers can create interesting and educational CTF challenges."
