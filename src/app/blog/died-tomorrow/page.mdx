@@ -1,0 +1,119 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+
+export const article = {
+  author: 'Zayne Zhang',
+  date: '2025-07-18',
+  title: 'What would happen if I died tomorrow?',
+  description:
+    'A reflection on the impact of a single life and the choices we make.',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+Someone asked me this question recently. Kinda morbid, but I think I was more surprised that I didn't have a good
+answer.
+
+Have I done enough to justify my existence? Have I been a net positive to the world? If someone erased my existence from the timeline,
+would the world look any different? Would people miss me? Would I have left a legacy?
+
+## Temporal discounting
+
+I think the reason this question hit me so hard is because it made me realize how much of a role temporal discounting 
+has, so far, played in my life. Put simply, temporal discounting is the tendency to value immediate rewards more than future ones.
+It's why we procrastinate, why we eat junk food, and why we don't save for retirement. But it's also why, for most
+of my life, I didn't really think about what I was optimizing for in the long term.
+
+Even as I'm now building a startup, I find myself thinking about the next few months, the next year, but it's really hard 
+to think about the next 10 years, or 20 years. I also kind of landed in this space by accident — at the time, I was trying
+to avoid serving the military as an infantry soldier, so I decided to apply to serve as a cybersecurity specialist instead.
+I borrowed a 500-page textbook from my teacher, read it cover to cover right before the test, and somehow got in. I didn't think
+that a few years later, I would be competing in the DEF CON CTF finals, or that I would be making a salary within the top 1% of people my
+age doing freelance pentesting, or that I would be building a startup in cybersecurity.
+
+Even when I ultimately went to Cambridge, I didn't really think about what that would have meant for my life once I graduated.
+I just had a vague idea that it would be prestigious and would unlock some doors for me. Ultimately, it did get me a prestigious 
+internship which I ended up not taking, and I could have just as easily started Hacktron 2 years ago without ever going to Cambridge.
+
+Perhaps I wouldn't have met my current investors, or perhaps I would have met them in a different way. I wouldn't know.
+
+## What to optimise for?
+
+Now that I have this realization, I think the question becomes: what do I want to optimize for? What should I be doing
+so that 10 years from now, if I were to die, I would feel like I had lived a life worth living?
+
+I think growing up, this had meant different things to me at different times. When I was younger, for the longest time,
+it was about being the best at something. I refused to be average, and I guess if I had died the moment I hit my dream rank
+in League of Legends, I would have felt happy with my life.
+
+At some point in the past few years, it became about making money. This was kind of a means to an end, because I thought that
+I wanted to buy my parents the best bungalow in Singapore and give my grandparents the best life possible. I thought if I 
+got the highest paying job I could, I would be happy.
+
+But I think I realized that this was a bit of a dead end. Put bluntly, I see this as just rebalancing a single coordinate in the
+universe — the world would be different if *I* had never existed, sure, but if you were to erase a few more people (like 
+my parents and grandparents) from the timeline, the world would still be the same. This was sort of the bare minimum
+I could do to justify my existence as a zero-sum to the universe.
+
+I think I want to optimise for scalable impact. I think there are many ways to make an outsized impact on a small number of people —
+just consider how many strangers you've met in your life that have influenced you in profound ways. But I think if someone has 
+the ability and resources to do this on a much larger scale, they have a moral obligation to do so. I think startups are still the 
+best way to do this, but again, what does impact even mean? Is it small incremental improvements to the world, in which case we can 
+achieve a good approximation of the optimal solution with a hill climbing algorithm that chooses at each step the best local improvement? 
+Or is the optimal solution something that is fundamentally different, and requires careful consideration of the problem space at the very beginning
+(and once you get it wrong, you can't really fix it)?
+
+## 2 months
+
+Even this goal is full of contradictions. If I had 2 months left to live, my priorities would likely shift dramatically
+towards a local optimum — I would want to spend time with my family and aim to make an outsized impact on a few people
+that I am close to.
+
+Some people are just worth more than others, and I think that's okay. I told the person who asked me this question that
+if they had 2 months left to live, they should spend it travelling the world, and I would drop everything to join them,
+because I knew they would have done the same for me.
+
+## Risk aversion
+
+I think that's part of why sometimes I find this path so scary. Prospect theory tells us that we are risk-averse when
+it comes to gains, but risk-seeking when it comes to losses. 
+
+If I were to die tomorrow, choosing a "safer" path would mean that I would have lived a life that was less impactful,
+but it would have been impactful nonetheless since I would have been able to provide for people I care about and spend
+much more time with them. The risk-seeking path, on the other hand, would have had much more potential for impact, but 
+the losses from failure (or dying tomorrow) would have been much more pronounced.
+
+But if we think about this from a rational perspective, the expected value of the risk-seeking path is still higher.
+It would be really sad if I were to die tomorrow, but that's likely not going to happen. But if there's a chance that
+I could do something that changes the world profoundly, then pure statistics would tell us that it's worth taking that risk.
+
+## The point?
+
+I keep circling back to one question:
+
+> How can a single life compound beyond itself?
+
+The answer I keep landing on is work that continues to widen its radius even when I am no longer around to steer it. 
+Start-ups are my chosen vehicle, but the deeper principle is leverage: building systems, tools, or ideas that unlock the efforts of thousands of others.
+
+There have been some small examples of this in my life so far. One example: I started a CTF team in Singapore that became the top team in the 
+country for some time and qualified for a bunch of international competitions, showing to many that Singaporeans can be competitive at the highest levels of 
+competitive hacking globally. I've left the team and am no longer active in CTFs, but the team is still active and the secondary effects that we created
+are still being felt today. 
+
+Because leverage rewards patience, my best hedge against the chance of “dying tomorrow” is to live today as though I might, while still investing as though I won’t. Concretely, that means:
+
+1. **Designing for continuity** — doing things with the expectation that I will not be around to see them through.
+2. **Choosing problems with second-order effects** — solving security will create a safer world that outlives me. If I ever get the opportunity though,
+  I want to work on climate change. That's the single biggest problem of my generation, but right now I don't have the skills or power to tackle it.
+3. **Measuring impact the way investors track compound interest** — returns are tiny at first, but they grow exponentially over time. If we do the most
+  locally optimal thing at every step, we will eventually get pretty far.
+
+If the experiment fails, at least I will have spent my finite hours pushing on the biggest fulcrum I was capable of finding, and sharing that journey with the people who matter most. 
+And if it works, the value created will dwarf anything I could have done by playing safe. Either way, the only unacceptable outcome is to leave the lever untouched.
+
+So the next time someone asks what would happen if I died tomorrow, I hope the honest answer will be: *“Less than you’d think, because the work is built to outlive me.”*

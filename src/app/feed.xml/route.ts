@@ -46,10 +46,10 @@ export async function GET(req: Request) {
     let date = article.find('time').first().attr('datetime')
     let content = article.find('[data-mdx-content]').first().html()
 
-    assert(typeof hidden === 'string')
-    assert(typeof title === 'string')
-    assert(typeof date === 'string')
-    assert(typeof content === 'string')
+    if (!hidden || !title || !date || !content) {
+      console.warn(`Skipping article ${id} due to missing metadata`)
+      continue
+    }
 
     if (hidden === 'true') {
       continue
