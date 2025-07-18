@@ -1,4 +1,6 @@
 import { ArticleLayout } from '@/components/ArticleLayout'
+import { Figure } from '@/components/Figure'
+import teamImage from './team.jpg'
 
 export const article = {
   author: 'Zayne Zhang',
@@ -117,3 +119,9 @@ If the experiment fails, at least I will have spent my finite hours pushing on t
 And if it works, the value created will dwarf anything I could have done by playing safe. Either way, the only unacceptable outcome is to leave the lever untouched.
 
 So the next time someone asks what would happen if I died tomorrow, I hope the honest answer will be: *“Less than you’d think, because the work is built to outlive me.”*
+
+<Figure
+  src={teamImage}
+  alt="The dream team behind Hacktron"
+  caption="The dream team behind Hacktron"
+/>
