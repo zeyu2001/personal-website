@@ -21,7 +21,7 @@ export const socials: Socials[] = [
     icon: LinkedInIcon,
   },
   {
-    href: 'https://x.com/zeyu2001',
+    href: 'https://x.com/zeyu1337',
     description: 'Follow on X',
     tooltip: 'X',
     icon: XIcon,
