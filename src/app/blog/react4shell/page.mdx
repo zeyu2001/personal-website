@@ -6,9 +6,9 @@ import htmlResponseImage from './1.png'
 export const article = {
   author: 'Zayne Zhang',
   date: '2025-12-06',
-  title: 'Making sense of React4Shell (CVE-2025-55182)',
+  title: 'Making sense of React4Shell / React2Shell (CVE-2025-55182)',
   description:
-    "A deep dive into the React4Shell vulnerability (CVE-2025-55182), a critical remote code execution vulnerability in the React Server Components Flight Protocol.",
+    "A deep dive into the React4Shell / React2Shell vulnerability (CVE-2025-55182), a critical remote code execution vulnerability in the React Server Components Flight Protocol.",
 }
 
 export const metadata = {
@@ -33,6 +33,10 @@ the community effort to remediate the vulnerability.
 - Hacktron's research team has identified and reported 3 WAF bypasses to Vercel, and has been working closely with relevant security teams to mitigate the vulnerability.
 
 <Figure src={exploitImage} alt="PoC Exploit" caption="PoC Exploit" />
+
+**Update:** Some news sources have been calling this a prototype pollution vulnerability. This is incorrect. While public PoCs have used `__proto__`, this is only used to 
+get the `Function` constructor. The actual vulnerability is that we can access JavaScript properties like `constructor`, when these belong to the `Object` prototype and are not keys of the 
+the object itself.
 
 ## Background
 
