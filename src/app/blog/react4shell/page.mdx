@@ -235,9 +235,6 @@ function initializeModelChunk<T>(chunk: ResolvedModelChunk<T>): void {
 Here, our `.value` is parsed as a JSON object and passed to `reviveModel`, which is a function that recursively deserializes the JSON object into a JavaScript object
 by resolving references.
 
-Here, we have our gadget! Since we control the `response` object, we can simply set `_prefix` to the contents of our desired function, e.g. `console.log('1337')`,
-and `_formdata.get` to the `Function` constructor, so that we construct `Function('console.log(1337)')`.
-
 ```typescript
 case 'B': {
   const id = parseInt(value.slice(2), 16);
@@ -247,6 +244,9 @@ case 'B': {
   return backingEntry;
 }
 ```
+
+Here, we have our gadget! Since we control the `response` object, we can simply set `_prefix` to the contents of our desired function, e.g. `console.log('1337')`,
+and `_formdata.get` to the `Function` constructor, so that we construct `Function('console.log(1337)')`.
 
 This is then returned as the `.then` of our crafted `Promise` object, so that when the `Promise` is resolved by React, our custom function is called.
 
