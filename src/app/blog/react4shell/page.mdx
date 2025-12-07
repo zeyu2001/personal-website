@@ -38,6 +38,14 @@ the community effort to remediate the vulnerability.
 get the `Function` constructor. The actual vulnerability is that we can access JavaScript properties like `constructor`, when these belong to the `Object` prototype and are not keys of the 
 the object itself.
 
+It is true that the exploit relies on:
+1. accessing the `constructor` property of the `Object` prototype
+2. overwriting a bunch of object properties
+
+But this is not "prototype pollution" as it is strictly defined in security. Prototype pollution means injecting malicious properties into the *global* `Object.prototype`, and being able to poison any JS object in the runtime. This would require accessing properties like `__proto__` or `prototype`.
+
+Here, the minimum viable exploit does not require the `__proto__` or `prototype` property within the payload, so simply blacklisting these in a WAF will NOT work.
+
 ## Background
 
 To understand this vulnerability, we first need some context on React Server Components (RSC) and the Flight protocol.
