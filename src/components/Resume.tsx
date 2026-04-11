@@ -8,6 +8,7 @@ import logoAuthenticate from '@/images/logos/allthenticate.png'
 import logoAuthenticateDark from '@/images/logos/allthenticate-white.png'
 import logoC53 from '@/images/logos/cure53.png'
 import logoHacktron from '@/images/logos/hacktron.png'
+import logoHacktronDark from '@/images/logos/hacktron-white.png'
 import logoOGP from '@/images/logos/ogp.webp'
 import logoOptiver from '@/images/logos/optiver.png'
 import logoTikTok from '@/images/logos/tiktok.png'
@@ -76,7 +77,7 @@ export function Resume() {
     {
       company: 'Hacktron AI',
       title: 'Co-Founder & CEO',
-      logo: logoHacktron,
+      logo: resolvedTheme === 'dark' ? logoHacktronDark : logoHacktron,
       start: {
         label: 'Apr. 2025',
         dateTime: '2025-04',

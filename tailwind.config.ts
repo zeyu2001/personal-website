@@ -1,12 +1,19 @@
 import typographyPlugin from '@tailwindcss/typography'
 import { type Config } from 'tailwindcss'
+import tailwindcssAnimate from 'tailwindcss-animate'
 
-import typographyStyles from './typography'
+import typographyStyles from './typography.ts'
 
 const config = {
   darkMode: 'selector',
-  plugins: [require('tailwindcss-animate'), typographyPlugin],
-  content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx,md,mdx}', './src/**/*.{ts,tsx}'],
+  plugins: [tailwindcssAnimate, typographyPlugin],
+  content: [
+    './pages/**/*.{ts,tsx,md,mdx}',
+    './components/**/*.{ts,tsx,md,mdx}',
+    './app/**/*.{ts,tsx,md,mdx}',
+    './src/**/*.{ts,tsx,md,mdx}',
+  ],
+  safelist: ['prose', 'dark:prose-invert'],
   prefix: '',
   theme: {
     fontSize: {

@@ -1,0 +1,177 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+
+export const article = {
+  author: 'Zayne Zhang',
+  date: '2026-04-11',
+  title: 'Cyber 2028',
+  description:
+    'Cyber is shifting from a labor-bound craft industry to a capital-bound one. That changes offense, defense, and state power all at once.',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+Anthropic published its [Mythos Preview cybersecurity evaluation](https://red.anthropic.com/2026/mythos-preview/) a few days ago, and a lot of people in cyber are spooked.
+
+Not because it reads like a scenario piece such as [AI 2027](https://ai-2027.com/), but because the point is more immediate: if frontier models are already finding and exploiting serious zero-days across major software targets, cyber is changing right now.
+
+This is a prediction essay about what happens now.
+
+My basic claim is that as cyber moves from a labor-bound craft industry to a capital-bound one, the economics of offense, defense, and state power change with it.
+
+## Cyber was a craft industry
+
+The parts of cyber that people usually mean when they say "advanced" have historically looked much closer to guild craftsmanship than industrial production. Good operators built intuition over years. They learned how to read weird codebases, infer system behavior from partial telemetry, chain small observations into a coherent exploit path, and adapt when the target did something unexpected.
+
+That kind of work did not scale. If you want twice as much output, you usually need roughly twice as many good people, and those people are hard to find, expensive to retain, and slow to train.
+
+This labor bottleneck has protected the world more than most people realize.
+
+A lot of current defensive assumptions only work because attackers have historically faced scarcity too. They could not deeply understand every target. They could not afford endless iteration against every exposed service. They could not customize every social engineering pretext. They could not continuously mutate malware or intrusion paths at machine speed while keeping quality high.
+
+In other words, many systems are not secure in the strong sense. They are secure only because the attacker cannot afford to care enough.
+
+Now, at the frontier, cyber power starts to concentrate among states and a small number of well-capitalized firms that can afford the full stack. At the same time, the marginal cost of many offensive actions collapses, which means the rest of the world gets flooded with cheap offensive capability. The frontier centralizes while the edge democratizes.
+
+That is the story of Cyber 2028.
+
+## The bottleneck moves up the stack
+
+Human expertise does not necessarily disappear, but more of it gets externalized into software and wrapped in systems that can be run **repeatedly**.
+
+The useful unit is no longer just "a really smart hacker". It is something closer to an offensive production stack that can be parallelized:
+
+- large models trained on code, infrastructure, and operational traces
+- agent loops that can do recon, hypothesis generation, tool use, validation, and adaptation
+- high-quality telemetry and vulnerability datasets
+- large-scale sandboxing and replay environments
+- delivery infrastructure, persistence infrastructure, and orchestration infrastructure
+
+None of this makes offense free. Frontier capability may become more expensive, not less. But it changes *where* the expense is. Instead of paying mainly for labor, you increasingly pay for the systems that make labor far more productive.
+
+The "AI makes everyone a 10x hacker" framing is too shallow. The more important effect is that AI lets a small number of highly capable people scale their judgement far more efficiently than a large number of average people. It is easier to give one top hacker or engineer $100k tokens and excellent tooling than to hire 100 more people and give each of them $1k tokens. Offensive throughput starts to scale more like cloud spend than like headcount.
+
+That matters because capital compounds differently from labor.
+
+Actors with deep pockets can buy more parallelism, more data, more evals, more validation, and faster feedback loops. They can run thousands of exploit hypotheses where a normal team would run ten. They can test persistence mechanisms, phishing variants, privilege-escalation chains, and lateral movement plans continuously instead of occasionally. They can close the loop between failed operations and improved models much faster than anyone else.
+
+So the decisive question becomes less "who has the best hackers?" and more "who can best industrialize them?"
+
+## Why this does not just centralize everything
+
+At first glance, this sounds like a pure concentration story. Rich states and hyperscalers win. Everyone else loses. There is some truth to that. But it misses the more dangerous half of the picture.
+
+**The fixed costs of frontier capability rise. The marginal cost of many attacks falls.**
+
+The top end of cyber becomes more capital-intensive because the frontier stack is expensive. But once the stack exists, the cost of generating one more phishing lure, one more impersonation attempt, one more malware variant, one more target dossier, one more exploit hypothesis, or one more intrusion path can become extremely low.
+
+A world where ten actors are terrifying is manageable. A world where ten million actors can each generate plausible offensive pressure cheaply is not.
+
+So the paradox is this:
+
+- strategic cyber concentrates
+- tactical cyber proliferates
+
+Major states and a few top-capitalized actors may dominate the frontier. But criminals, mercenaries, fraud shops, low-tier APTs, and ordinary nuisance actors all get dragged upward by the falling marginal cost of competence.
+
+So Cyber 2028 is not a story about centralization or democratization. It is both at once.
+
+## Strategic cyber starts to look different
+
+So does this mean cyber weapons become more like nuclear weapons? Probably not quite. Cyber remains noisier, leakier, harder to attribute, easier to reuse, and far more useful below the threshold of open conflict. Nuclear weapons are mostly valuable because they are not used. Cyber capability is often valuable precisely because it is used continuously, as long as it is not detected or below the threshold of starting a war.
+
+Still, at the frontier, cyber does begin to acquire some strategic-weapons-like features.
+
+First, top-end capability becomes concentrated among a relatively small number of actors who can afford the full stack.
+
+Second, many capabilities will be held in reserve rather than burned immediately, such as zero-days and backdoors that provide latent access into critical infrastructure, logistics systems, telecoms, satellite links, industrial control environments, or key software supply chains.
+
+Third, deterrence becomes even murkier because states can signal capability without disclosing specifics, while the real value sits in uncertainty: what access has already been established, what can be turned on in a crisis, and what dependencies are already compromised.
+
+The result is not really a one-to-one replacement for nuclear deterrence. It is something stranger: continuous pre-battlefield shaping under partial visibility.
+
+As frontier cyber becomes more nuclear-like, mutually assured destruction means that smaller players like rogue actors and criminals become the day-to-day threat.
+
+By 2028, I expect the line between "crime", "espionage", "influence", and "preparation of the battlefield" to blur further. The same access pathway can support all four depending on when it is used and by whom.
+
+### 1. The mid-market company that can no longer hide
+
+A mid-sized SaaS company in 2020 could survive partly by being uninteresting. It might not have world-class security, but it also was not worth an advanced attacker burning much time on. The long tail of mediocre defenses benefited from attacker scarcity.
+
+By 2028, that shelter collapses.
+
+The company is now probed constantly by agentic offensive systems that can read public documentation, infer likely cloud architecture from job listings and stack traces, adapt phishing lures to individual employees, and continuously generate new intrusion hypotheses. Nobody on the attacker side needs to think this company is special. The cost of caring has collapsed.
+
+So the security posture of the median firm starts to depend less on whether it is important, and more on whether it can automate defense faster than cheap attackers can automate offense. A lot of firms discover, too late, that "not being a target" was never a strategy. It was a subsidy.
+
+### 2. The criminal group with industrial-scale personalization
+
+Today, the average scam or intrusion campaign is still constrained by quality. Personalization exists, but it is often shallow. Operators make tradeoffs between scale and credibility.
+
+By 2028, the better criminal groups may not have to choose as often.
+
+A relatively small organization will be able to run campaigns with dossiers built from breached data, public social graphs, leaked inboxes, corporate org charts, conference talks, internal writing style, and prior communication patterns. Pretexts will be generated, tested, and adapted automatically. Voice and video impersonation will not be perfect, but they will not need to be. Most fraud does not require perfection. It requires one tired employee at the wrong moment.
+
+This does not mean every gang becomes elite. It means elite tradecraft fragments into reusable infrastructure. Once enough of the offensive stack gets productized, the median criminal operator gets much better without understanding much more.
+
+### 3. The state that never quite attacks
+
+Now zoom out to major-power competition.
+
+A capable state in 2028 may spend years building, validating, and quietly maintaining access into shipping, energy, telecoms, cloud control planes, and defense-adjacent supply chains, not because it intends to trigger immediate disruption, but because optionality itself becomes strategic.
+
+That access sits there in peacetime, half-espionage and half-contingency plan.
+
+Cyber at the frontier means that capable nation states have pre-positioned leverage inside the systems that other nation states depend on. If a war breaks out, this leverage allows them to impose devastation on multiple enemy states in milliseconds and without firing a shot. So no war happens, only because starting one would mean the enemy has already won.
+
+## The defense side also becomes capital-bound
+
+There is an obvious response to all this: fine, defense gets cheaper too.
+
+Defenders will definitely get better tooling, better anomaly detection, better code review, faster triage, stronger identity enforcement, automated remediation, and much richer feedback loops between incidents and prevention. The best organizations will look dramatically more resilient than they do today.
+
+But this is precisely the problem. Resilience starts to look like a scale advantage.
+
+Organizations with enough money, talent density, and telemetry can build defensible environments. Everyone else gets the worse version of this future.
+
+The frontier firms and the strongest states may become more defensible than ever. The median school, hospital, logistics provider, local government, vendor, or SMB may become relatively less defensible, not because defenders there are stupid, but because they cannot afford the fixed costs of industrialized defense.
+
+That has policy consequences because modern societies are only as strong as their softest critical dependencies.
+
+## What follows from this?
+
+If this model is even directionally right, then a lot of current cyber policy is aimed at the wrong level of abstraction.
+
+The problem is not simply "more cyber attacks". The problem is a structural shift in the economics of capability. Policy that assumes cyber remains bottlenecked mainly by elite labor will age badly.
+
+Some implications seem straightforward.
+
+First, we should expect security capacity to become more uneven, and plan around that explicitly. It is not enough to harden the top 1% of organizations if the supply chain, local government, healthcare, and industrial base remain easy to pressure.
+
+Second, resilience matters more than perfect prevention. In a world of abundant low-cost offense, the decisive defensive advantage is often the ability to recover quickly, revoke trust quickly, rotate secrets quickly, and continue operating under partial compromise.
+
+Finally, governments should be careful not to overlearn the concentration half of the story. Yes, frontier cyber may centralize among major powers. But the broader social harm may come less from exquisite state capability than from the background radiation of cheap offense everywhere else.
+
+That means public policy cannot focus only on the most advanced adversaries. It also has to reduce the everyday attackability of ordinary institutions.
+
+## The new cyber order
+
+The point is simple:
+
+Cyber stops being a craft industry and becomes an industrial one.
+
+That does not make it less human. It changes where human expertise sits in the stack. Elite labor gets embedded in capital. A small number of strong actors build offensive and defensive systems that compound. Everyone else deals with the outputs.
+
+This produces a bifurcated world.
+
+At the top, cyber power becomes more strategic, more concentrated, and more entangled with state competition.
+
+Everywhere else, offensive capability becomes cheaper, more personalized, more persistent, and much harder to ignore.
+
+Cyber 2028 is not just "more hacks". It is a shift in the economics of capability.
+
+The world does not run out of smart defenders. It runs out of organizations that can afford the capital stack required to let those defenders keep up.
