@@ -2,7 +2,7 @@ import typographyPlugin from '@tailwindcss/typography'
 import { type Config } from 'tailwindcss'
 import tailwindcssAnimate from 'tailwindcss-animate'
 
-import typographyStyles from './typography.ts'
+import typographyStyles from './typography'
 
 const config = {
   darkMode: 'selector',
