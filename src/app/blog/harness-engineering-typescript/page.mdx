@@ -241,7 +241,7 @@ A few things here:
 
 ## "Garbage collection" for slop
 
-Even with our best efforts, "slop code" is inevitable. It's not like humans didn't produce slop code before. But AI allowed us to combat this by periodically auditing the codebase for things like dead code (functions with no references), oudated documentation, etc.
+Even with our best efforts, "slop code" is inevitable. It's not like humans didn't produce slop code before. But AI allowed us to combat this by periodically auditing the codebase for things like dead code (functions with no references), outdated documentation, etc.
 
 We did this by creating a GitHub Actions workflow that just runs Claude Code every 24 hours with prompts that ask it to:
 
