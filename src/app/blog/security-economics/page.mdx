@@ -4,8 +4,7 @@ export const article = {
   author: 'Zayne Zhang',
   date: '2026-01-09',
   title: 'The economic failures of penetration testing',
-  description:
-    "Information asymmetry, moral hazards, and perverse feedback loops in the penetration testing market.",
+  description: 'Information asymmetry, moral hazards, and perverse feedback loops in the penetration testing market.',
 }
 
 export const metadata = {
@@ -15,10 +14,10 @@ export const metadata = {
 
 export default (props) => <ArticleLayout article={article} {...props} />
 
-Offensive security seems to be getting its time in the sun again with the rise of AI-powered tools that promise 
+Offensive security seems to be getting its time in the sun again with the rise of AI-powered tools that promise
 fully autonomous penetration testing. But is it really all that different from the old days?
 
-The persistent failure of the penetration testing market is often framed as a technical problem: 
+The persistent failure of the penetration testing market is often framed as a technical problem:
 not enough talent, insufficient automation, immature tooling, or attackers moving faster than defenders.
 This framing is comforting because it implies that incremental technical progress will eventually close the gap.
 In reality, the core problem is economic. It systematically rewards the appearance of security over the reduction of risk,
@@ -30,19 +29,19 @@ The core problem: it is not a market for outcomes, it is a market for signals.
 
 Akerlof's [market for lemons](https://en.wikipedia.org/wiki/Market_for_lemons) is a classic example of how information asymmetry can
 lead to market failure. In the used car market, the seller knows more about the quality of the car than the buyer. It is impossible
-for the buyer to know the true quality of the car before buying it, so they price for the expected (average) quality. 
-This leads to the high-quality sellers leaving the market because the average price falls below their cost of production, 
+for the buyer to know the true quality of the car before buying it, so they price for the expected (average) quality.
+This leads to the high-quality sellers leaving the market because the average price falls below their cost of production,
 leading the average quality of the market to fall further.
 
 In a similar vein, the penetration testing market adversely selects against the best pentesters, instead selecting for proxy
-signals: certifications, report length, vulnerability counts, or compliance acceptance. 
-None of these are tightly correlated with real attacker cost or the likelihood of a breach. 
+signals: certifications, report length, vulnerability counts, or compliance acceptance.
+None of these are tightly correlated with real attacker cost or the likelihood of a breach.
 Again, there are tons of firms with CREST certifications, so the buyer prices for the average.
 High-quality providers, whose work is slower, more expensive, and harder to explain in a procurement meeting, are crowded out.
 Lower-quality providers, who can produce predictable findings cheaply and repeatedly, start to dominate the market.
 
-Over time, this drives a race to the bottom. The equilibrium product becomes the "acceptable" pentest: 
-one that produces familiar, low-hanging fruit, fits procurement expectations, and minimizes organizational disruption, 
+Over time, this drives a race to the bottom. The equilibrium product becomes the "acceptable" pentest:
+one that produces familiar, low-hanging fruit, fits procurement expectations, and minimizes organizational disruption,
 regardless of whether it meaningfully models attacker sophistication.
 
 ## Moral Hazards and Perverse Feedback Loops
@@ -53,11 +52,11 @@ There is no upside for identifying deep systemic flaws that are politically diff
 
 Security teams, meanwhile, are often evaluated on audit success rather than security posture. Their rational incentive is to
 commission work that passes compliance checks with minimal internal friction. A pentest that uncovers uncomfortable architectural
-weaknesses creates political cost without guaranteeing budget or remediation authority. 
+weaknesses creates political cost without guaranteeing budget or remediation authority.
 A shallow pentest that confirms existing narratives is safer.
 
-This moral hazard produces predictable behavior. Pentests focus on low-hanging fruit. 
-Reports emphasize volume over depth. The same vulnerability classes reappear annually, not because they are hard to fix, 
+This moral hazard produces predictable behavior. Pentests focus on low-hanging fruit.
+Reports emphasize volume over depth. The same vulnerability classes reappear annually, not because they are hard to fix,
 but because no one is economically rewarded for ensuring that they are fixed.
 
 Modern application-security tooling exacerbates the problem. Better tools increase visibility into real risk,
@@ -66,12 +65,12 @@ For engineering organizations already under delivery pressure, security improvem
 
 From a narrow organizational perspective, it is rational to underinvest in tools or tests that surface actionable
 truth without providing remediation capacity. A weak pentest that produces a small, predictable list of issues is
-less disruptive than a strong system that reveals hundreds of real weaknesses. In this sense, insecurity becomes 
+less disruptive than a strong system that reveals hundreds of real weaknesses. In this sense, insecurity becomes
 a form of organizational equilibrium. Unless the tool makes **remediation** low-friction, it will not be easily adopted.
 
-## The Compliance Demand proxy
+## The Compliance Demand Proxy
 
-Compliance frameworks like SOC 2 and ISO 27001 further distort incentives by acting as demand proxies for security. 
+Compliance frameworks like SOC 2 and ISO 27001 further distort incentives by acting as demand proxies for security.
 Pentests are purchased not to actually find meaningful security issues, but because they are required by an external checklist.
 This moves the goalpost away from realistic attacker behaviour and towards helping the organisation pass the audit.
 
@@ -96,38 +95,38 @@ Markets with positive externalities tend to under-consume because the second-ord
 so they are not priced in.
 
 Security improvements generate positive externalities. A company that fixes systemic vulnerabilities reduces risk not only for itself, but for customers,
-partners, and the broader ecosystem. However, the cost of remediation is borne immediately and internally, while much of the benefit is diffused over time and external. 
+partners, and the broader ecosystem. However, the cost of remediation is borne immediately and internally, while much of the benefit is diffused over time and external.
 
-This is why companies often deploy cheap fixes that don't remediate fundamental architectural weaknesses, and why the same bug fixed from 
+This is why companies often deploy cheap fixes that don't remediate fundamental architectural weaknesses, and why the same bug fixed from
 a previous pentest tends to resurface in another slightly different form later.
 
 ## Re-aligning Incentives
 
-The failures described above persist not because organizations misunderstand security, but because the current market 
-clears at an equilibrium optimized for compliance, cost containment, and plausible deniability. 
+The failures described above persist not because organizations misunderstand security, but because the current market
+clears at an equilibrium optimized for compliance, cost containment, and plausible deniability.
 Any attempt to "fix" the penetration-testing market must therefore focus on changing incentives rather than improving technical capabilities in isolation.
 
 Looking ahead into the next 5 years, how do we improve the market? There is no perfect answer, but some things that come to mind:
 
 1. **Re-internalise external responsibilities**: moving from one-off pentests that hands off all long-term responsibility to the buyer
-to a continuous approach that expects long-term, consistent outcomes from the seller. Security products should be designed
-to stand the test of time, and be viewed as a way to reduce responsibility for the security team.
+   to a continuous approach that expects long-term, consistent outcomes from the seller. Security products should be designed
+   to stand the test of time, and be viewed as a way to reduce responsibility for the security team.
 
-2. **Align pricing with outcomes**: selling actionable outcomes, which include *both* discovery and triaging/remediation,
-reduces noise and prevents information that cannot be acted on from being marketed as value. Security tooling that creates more
-work for engineering teams with no corresponding budget or authority is not sustainable. Tools should make remediation low-friction,
-and organisations should view these tools as reducing work, not increasing it.
+2. **Align pricing with outcomes**: selling actionable outcomes, which include _both_ discovery and triaging/remediation,
+   reduces noise and prevents information that cannot be acted on from being marketed as value. Security tooling that creates more
+   work for engineering teams with no corresponding budget or authority is not sustainable. Tools should make remediation low-friction,
+   and organisations should view these tools as reducing work, not increasing it.
 
 3. **Reframe compliance as a lagging indicator**: rather than being a primary driver of demand,
-compliance artifacts should be seen as byproducts of a secure system (instead of its objective!). This is a hard one 
-because it requires shifting of internal metrics.
+   compliance artifacts should be seen as byproducts of a secure system (instead of its objective!). This is a hard one
+   because it requires shifting of internal metrics.
 
-Attempts to improve security by increasing technical capability alone will fail. More accurate testing, better tools, 
-or deeper analysis raise the cost of information without changing who bears responsibility for acting on it. 
+Attempts to improve security by increasing technical capability alone will fail. More accurate testing, better tools,
+or deeper analysis raise the cost of information without changing who bears responsibility for acting on it.
 The result is a market that systematically undervalues high-signal work and selects against those who produce it.
 
 In this sense, the failures of the pentesting market are not unique. They mirror the broader economics of prevention:
-costs are immediate, benefits are invisible, and success is defined by the absence of events that cannot be proven to have been avoided. 
+costs are immediate, benefits are invisible, and success is defined by the absence of events that cannot be proven to have been avoided.
 Markets built on such foundations require deliberate incentive design to function at all.
 
 Absent that design, penetration testing will remain what it largely is today: not a mechanism for reducing risk,

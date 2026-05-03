@@ -1,0 +1,460 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+import { Figure } from '@/components/Figure'
+import claudeTweetImage from './claude.png'
+
+export const article = {
+  author: 'Zayne Zhang',
+  date: '2026-05-03',
+  title: 'Harness engineering: Preparing TypeScript codebases for coding agents',
+  description:
+    "Vibe coding is upon us, but it works best when the codebase has strong affordances. Here's how to prepare a TypeScript codebase for coding agents like Claude Code and Cursor.",
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+Vibe coding is upon us, but it works best when the codebase has strong **affordances** — a concept in design that describes the possible actions an actor (in this case, a coding agent) can take, in relation to an object (in this case, the codebase):
+
+> Affordance: a use or purpose that a thing can have, that people notice as part of the way they see or experience it.
+
+For a coding agent like Claude Code or Cursor to produce productive code instead of "AI slop" that becomes expensive to maintain and clean up later, building a codebase with obvious structure and automated guardrails becomes important.
+
+Even the smartest models today can't possibly reason about every edge case without a good harness. And even with coding agents like Claude Code, designing repositories in a thoughtful way can go a long way in improving the quality of the code.
+
+A repository should be treated less like a pile of code that can be executed, and more like an **execution environment for agents**. Good vibe coding, therefore, would mean that the environment provides:
+
+- Fast validation against "bad engineering"
+- A constrained blast radius
+- Guardrails that enforce invariants before commiting
+- Tests and scripts that the agent can use to "vibe-check" itself
+
+## Make the repository legible to agents
+
+Use [pnpm](https://pnpm.io/) and set up a monorepo. If you want to work across multiple repositories for frontend and various backend microservices, you'll need to either make your coding agent context switch across these repositories, or provide them with overly broad permissions so that they can access all repositories in the same session. This isn't nice. So just use a monorepo.
+
+```
+apps/
+  frontend/
+  backend/
+docs/
+  architecture.md
+  conventions.md
+packages/
+  eslint-config/
+  shared-utils/
+  shared-tyles/
+  typescript-config/
+CLAUDE.md
+package.json
+pnpm-lock.yaml
+pnpm-workspace.yaml
+turbo.json
+```
+
+The monorepo structure allows you to create multiple apps that use shared packages. These can be utilities and type definitions. In addition, I find it useful to standardise ESLint and TypeScript configurations in a shared package, so that they can be easily imported in new apps and packages.
+
+For example, once you export an ESLint configuration like this in a shared package:
+
+```js
+// packages/eslint-config/base.js
+import js from '@eslint/js'
+import eslintConfigPrettier from 'eslint-config-prettier'
+import turboPlugin from 'eslint-plugin-turbo'
+import tseslint from 'typescript-eslint'
+import onlyWarn from 'eslint-plugin-only-warn'
+
+/**
+ * A shared ESLint configuration for the repository.
+ *
+ * @type {import("eslint").Linter.Config[]}
+ * */
+export const config = [
+  js.configs.recommended,
+  eslintConfigPrettier,
+  ...tseslint.configs.recommended,
+  {
+    plugins: {
+      turbo: turboPlugin,
+    },
+    rules: {
+      'turbo/no-undeclared-env-vars': 'warn',
+      '@typescript-eslint/no-unused-expressions': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+    },
+  },
+  {
+    plugins: {
+      onlyWarn,
+    },
+  },
+  {
+    ignores: ['dist/**'],
+  },
+]
+```
+
+Each app and package can simply import from this configuration.
+
+```js
+// apps/frontend/eslint.config.mjs
+import { config } from '@my-project/eslint-config/base'
+export default config
+```
+
+## Skills encapsulate best practices
+
+Skills like [nestjs-best-practices](https://github.com/Kadajett/agent-nestjs-skills) and [typescript-advanced-types](https://github.com/sickn33/antigravity-awesome-skills/blob/main/plugins/antigravity-awesome-skills-claude/skills/typescript-advanced-types/SKILL.md) can help coding agents produce idiomatic code. Of course, a lot of this is strongly opinionated, so we also write our own skills to encapsulate the best practices we've learnt over the years. If you don't know what those best practices should be, Google this or point AI at an example repository that demonstrates strong software engineering principles, and have it come up with its own skill.
+
+We have engineers using all sorts of different agents: Claude, Codex, Cursor, …, so if we want these skills to be useful and shared across team members, we need every coding agent to use the same set of skills.
+
+That's why skills are stored in `.agents`, and `.codex`, `.claude`, etc. symlink to the skills stored in the main `.agents` directory.
+
+```
+.agents/
+  skills/
+    typescript-expert/
+      SKILL.md
+    typescript-advanced-types/
+      SKILL.md
+    [...]
+.codex/
+  skills/
+    typescript-expert -> ../../agents/skills/typescript-expert
+    typescript-advanced-types -> ../../agents/skills/typescript-advanced-types
+    [...]
+.claude/
+  skills/
+    typescript-expert -> ../../agents/skills/typescript-expert
+    typescript-advanced-types -> ../../agents/skills/typescript-advanced-types
+    [...]
+[...]
+```
+
+## Documentation that agents read and maintain
+
+A `CLAUDE.md` (or equivalent), if written well, goes a long way in providing self-evolving documentation. This documentation can outline architecture, tech stack, but also more importantly, rules that the AI agent should abide by.
+
+```markdown
+# VibeSlop - The Best Vibe Coded Application
+
+## Overview
+
+VibeSlop has a NestJS backend and a Nuxt frontend. It is a B2B AI SaaS.
+
+[...]
+
+## Notion Documentation
+
+**IMPORTANT**: VibeSlop has comprehensive documentation in Notion that should be kept in sync with code changes.
+
+**Main page**: https://notion.so/[...]
+
+### Documentation Structure
+
+| Section        | Page ID    | Description                    |
+| -------------- | ---------- | ------------------------------ |
+| Authentication | `DEADBEEF` | Auth guards, token types, RBAC |
+| [...]          | [...]      | [...]                          |
+
+### When to Update Notion Docs
+
+Update the relevant Notion page when:
+
+- Adding new API endpoints → Update API Reference
+- Adding/modifying entities → Update Database & Entities
+- Changing auth guards or token handling → Update Authentication
+
+[...]
+
+### How to Update
+
+Use the Notion MCP tools:
+
+- `mcp__notionMCP__notion-fetch` - Read existing page content
+- `mcp__notionMCP__notion-update-page` - Update page content
+- `mcp__notionMCP__notion-create-pages` - Create new nested pages
+
+[...]
+
+## AI Coding Rules (MANDATORY)
+
+These rules are non-negotiable. Every code change — whether new feature, bugfix, or refactor — must comply. Violations must be fixed before committing.
+
+### DTO & OpenAPI Contract
+
+[...]
+
+### TypeScript Strictness
+
+- **No casting** except `as const`. No `as unknown as X`, `as any`, `as SomeType`, `@ts-ignore`, `// @ts-expect-error`.
+- **Use enums** instead of magic strings. If a value has a fixed set of options, define an enum.
+- **Use optional fields sparingly** — prefer union types (`string | null`) over optional (`string?`) when the field is semantically required but may be absent.
+- **No re-declaring types** that already exist in `@my-project/shared-types`, entity definitions, or generated code.
+- `pnpm check-types` must pass before committing.
+
+### Architecture
+
+[...]
+
+### Minimal Changes / No Slop
+
+AI-generated code accumulates: narration comments, single-use helpers, dead code from earlier iterations, error handling for cases that can't happen. Before declaring done, re-read your own diff with a hostile eye and cut everything the current implementation doesn't need. The principle is that a bug fix does not need surrounding cleanup, a one-shot change does not need a helper, and previous iterations are obsolete the moment a later iteration supersedes them.
+
+- **Re-read the diff end-to-end before finishing.** After several iterations, files carry leftovers — replaced methods, unused imports, stale branches, helpers that nothing calls anymore. Delete them. Git has the history; the codebase does not need a tombstone.
+- **No narration comments.** Don't explain WHAT (names do that) or reference the task ("added for X", "used by Y flow", "handles issue Z"). Only write a comment when the WHY is non-obvious: a hidden constraint, a workaround, a surprising invariant.
+  - ✗ `// Loop through findings and send feedback to Slack`
+  - ✗ `// Added for the unfurl flow` / `// TODO: remove old logic once migrated`
+  - ✓ `// Stripe retries webhooks on 5xx — dedupe on event.id before mutating state`
+- **No commented-out code, no "removed X" tombstones, no backwards-compat shims for code you just deleted in the same PR.** If it's gone, it's gone. Don't keep a renamed `_oldMethod` "just in case".
+- **No single-use abstractions.** Don't create a helper, wrapper, base class, or custom decorator until a second caller exists. Three similar lines beats a premature abstraction. `packages/shared-utils/src/status-mapper.ts` is what justified extraction looks like — used across `scan/`, `findings/`, and `cost-estimation/`. Don't manufacture that bar; let duplication prove it.
+- **No speculative error handling.** Trust internal callers and framework guarantees. DTOs already validate controller input via `class-validator` — a service that receives a typed `SendFeedbackDto` (`src/findings/dto/send-feedback.dto.ts`) does not re-check that `reaction` is a string. Validate only at true boundaries: HTTP input, webhook payloads, external API responses, untyped env vars.
+  - ✗ `try { return await this.repo.findOne(...) } catch (e) { throw e }`
+  - ✗ `if (!user) throw new Error('user required')` where the parameter type is `User`, not `User | undefined`
+  - ✗ Wrapping a single `repo.save()` in a try/catch that logs and rethrows
+- **Prefer editing existing files and reusing existing types.** Search `src/utils/`, `src/services/`, `src/dto/`, and `@my-project/shared-utils` before writing a new helper. Reuse `PaginationDto` (`src/dto/pagination.dto.ts`) for paginated endpoints instead of defining `page`/`limit` again. Reuse entity types from `@my-project/shared-types` instead of redeclaring shapes. Don't split a 200-line service into four files unless there's an actual reason.
+- **Keep the shape minimal.** Controllers stay thin — validate → service → return, no branching, no queries (see `src/findings/findings.controller.ts`). DTOs carry request/response fields only, decorated with `@ApiProperty` + `class-validator` — nothing more (see `src/findings/dto/send-feedback.dto.ts`, `src/dto/pagination.dto.ts`). Entities stay as columns + relations — no computed getters or lifecycle hooks unless actually needed (see `src/seat/organization-developer.entity.ts`).
+- **Frontend caveat:** UI iteration is where slop compounds fastest — unused props, stale Tailwind classes, dead conditional branches from designs two revs ago, state nothing reads. Same rule applies with more force: read the component top-to-bottom against the current design before declaring done, and delete anything the current design doesn't use.
+
+### Quality Gates
+
+- Tests must pass (`pnpm test`) before committing.
+- Linter must pass (`pnpm lint`) before committing.
+- Type-checker must pass (`pnpm check-types`) before committing.
+```
+
+A few things here:
+
+1. We enforce self-documenting development by instructing the agent to update Notion documentation. This assumes that the Notion MCP is used.
+
+2. We enforce AI coding rules based on behaviour we've observed in the past. For example, we saw that frontend code produced a lot of slop due to the nature of UI iteration: it's meant to produce lots of different variations until the developer is happy with the result. This means that often times, coding agents leave a lot of stale and dead code from previous iterations. We found that enforcing the "minimal changes" rule helped a lot.
+
+## "Garbage collection" for slop
+
+Even with our best efforts, "slop code" is inevitable. It's not like humans didn't produce slop code before. But AI allowed us to combat this by periodically auditing the codebase for things like dead code (functions with no references), oudated documentation, etc.
+
+We did this by creating a GitHub Actions workflow that just runs Claude Code every 24 hours with prompts that ask it to:
+
+1. Clean up poor code quality based on a set of rules we maintain in the repository under `docs/`.
+2. Update the `CLAUDE.md` above based on the latest code changes.
+
+```yaml
+name: Claude Garbage Collection
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+concurrency:
+  group: claude-garbage-collection
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    strategy:
+      fail-fast: false
+      matrix:
+        target_branch:
+          - staging
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          ref: ${{ matrix.target_branch }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          token_format: access_token
+
+      - name: Set NPM_TOKEN for Artifact Registry
+        run: echo "NPM_TOKEN=${{ steps.auth.outputs.access_token }}" >> "$GITHUB_ENV"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Claude garbage collection task
+        id: claude-cleanup
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          base_branch: ${{ matrix.target_branch }}
+          prompt: |
+            Read `CLAUDE.md` and `docs/cleanup/README.md`. Use `docs/cleanup/` as the source of truth for this garbage collection pass.
+            Work only against `${{ matrix.target_branch }}` and keep the change scoped to that branch's current state.
+            You may make multiple improvements, but each PR must stay focused on one small, safe maintenance concern.
+            Leave the repository unchanged if there is no clear cleanup to make.
+          additional_permissions: |
+            actions: read
+          claude_args: "--allowedTools 'Edit,MultiEdit,Write,Read,Glob,Grep,LS,Bash(git:*),Bash(bun:*),Bash(npm:*),Bash(npx:*),Bash(pnpm:*),Bash(gh:*)'"
+
+  sync-claude-md:
+    strategy:
+      fail-fast: false
+      matrix:
+        target_branch:
+          - staging
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          ref: ${{ matrix.target_branch }}
+
+      - name: Sync CLAUDE.md with codebase
+        id: claude-md-sync
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          base_branch: ${{ matrix.target_branch }}
+          prompt: |
+            Your sole task is to update all `CLAUDE.md` files so they accurately reflect the current codebase on the `${{ matrix.target_branch }}` branch.
+
+            Steps:
+            1. Read every `CLAUDE.md` file in the repo (root `.claude/CLAUDE.md` and any nested ones like `apps/my-app/CLAUDE.md`, etc.).
+            2. Audit each section against the actual codebase:
+               - **Project structure**: list directories under `apps/my-app/src/` and update the tree if modules were added, renamed, or removed.
+               - **Key entities**: check `apps/my-app/src/**/entities/*.entity.ts` and update the entity table.
+               - **API namespaces**: check all `@Controller()` decorators and update the namespace table.
+               - **Key commands**: verify each command in `package.json` scripts still exists.
+               - **Environment variables**: check `.env.example` and update the env var list.
+               - **Path aliases**: check `tsconfig.json` path mappings.
+               - **Shared packages**: check `packages/*/package.json` names.
+               - **Guards & auth**: check `src/guards/` and `src/middleware/` for current guard list.
+            3. Remove references to files, modules, entities, or endpoints that no longer exist.
+            4. Add entries for new modules, entities, or endpoints that are missing from the docs.
+            5. Do NOT change style, tone, or conventions sections — only factual/structural sections.
+            6. If nothing is out of date, make no changes and do not open a PR.
+
+            Keep the PR focused: only `CLAUDE.md` file changes, nothing else.
+          additional_permissions: |
+            actions: read
+          claude_args: "--allowedTools 'Edit,MultiEdit,Write,Read,Glob,Grep,LS,Bash(git:*),Bash(bun:*),Bash(npm:*),Bash(npx:*),Bash(pnpm:*),Bash(gh:*)'"
+```
+
+This produces easily mergable pull requests a lot of the time, and has saved us countless hours of manual refactoring and cleanup. It's almost like a garbage collection engine that cleans up dead code and stale documentation in the background, without needing much manual work from us apart from reviewing (mostly clean) PRs.
+
+## Making bad code hard to commit
+
+The shame of asking Claude Code to help you run `git commit`… well, it's a norm now and lots of people do it. So the best thing to do is to use hooks that enforce quality at commit-time.
+
+<Figure src={claudeTweetImage} alt="Claude Tweet" width="2/3" caption="Are you still the developer?" />
+
+You can set this up pretty easily:
+
+```bash
+pnpm add -D husky lint-staged
+pnpm exec husky init
+```
+
+and in `package.json`:
+
+```json
+{
+  "lint-staged": {
+    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{json,md,yml,yaml}": ["prettier --write"]
+  }
+}
+```
+
+This ensures that all code at least passes linting and formatting rules before hitting GitHub.
+
+What about tests and typechecking? Now it's time to take this one step further and provide the agent with…
+
+## One command to validate everything
+
+Agents need a finish line. Once the feature is complete, functional testing can be easily done using Playwright or Cursor's built-in browser. But how does it know that the code is in good shape for review?
+
+You can create a script like this that type checks, lints, runs unit tests, and produces a production build:
+
+```json
+{
+  "scripts": {
+    "validate": "pnpm typecheck && pnpm lint && pnpm test && pnpm build"
+    [...]
+  }
+}
+```
+
+then instruct the agent through e.g. `CLAUDE.md` to make use of this command.
+
+```
+Before considering a task complete, run:
+pnpm validate
+
+If it fails, fix the errors rather than working around the checks.
+Do not remove tests or weaken types unless explicitly asked.
+```
+
+## Test-driven development, always
+
+Agents are only good when they can complete the "code → test / validate → code again" loop with high confidence that the test / validate step actually reflects what the developer wants.
+
+This is where the tried-and-tested TDD methodology really shines. First, you describe the intended spec to the agent. You can write a Markdown file for this. Next, the agent generates test cases. Now, you manually inspect those test cases to see if they reflect the behaviour that you want:
+
+```ts
+it('does not charge customers twice for the same billing period', () => {
+  // ...
+})
+```
+
+If they don't, then the agent should change the tests. Once you're satisfied with the test spec, then (and only then) get the agent to start doing the real coding work.
+
+For coding agents, a good test suite is not only good documentation, but also serve as great supervision.
+
+## CI where local harness engineering isn't enough
+
+Local hooks can only catch so many obvious problems. In the end, CI tests are where many bugs are found before they make it to production.
+
+One example of where CI tests are most useful is for security. It's no secret that vibe coding has produced a lot more software vulnerabilities in recent months! When agents generate code quickly, they also generate more places for auth checks to be skipped, dependencies to sprawl, and business logic assumptions to break.
+
+For example, tools like [GitGuardian](https://www.gitguardian.com/) can catch accidentally-committed secrets, and [Socket](https://socket.dev/) can catch vulnerable or suspicious dependencies to stop supply-chain attacks.
+
+For deeper application security issues, especially the kinds generic scanners struggle with, you can also use AI-native tools like [Hacktron](https://hacktron.ai/) in CI to review pull request for real code-level vulnerabilities: broken authorization, unsafe business logic, and other security regressions that require more context than simple pattern matching.
+
+The advantage of tools like [Hacktron](https://hacktron.ai/) is that unlike traditional scanners that still rely on known syntactic patterns and AI reviewers that provide only functional testing and code quality issues, Hacktron finds real security vulnerabilties that are introduced throughout the lifetime of your organisation using context-aware analysis to identify the security issues that Claude and Codex miss.
+
+## Always think about affordance
+
+I hope this article has been helpful to you. I've outlined some techniques and ways that we think about vibe coding while enforcing code quality and security.
+
+The key thing to bear in mind is to always think about what your codebase and development environment is affording to the model. The output of your coding agent will depend heavily on that, because the environment dictates the constraints in which these agents operate.
